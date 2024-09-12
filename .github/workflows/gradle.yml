@@ -21,7 +21,6 @@ jobs:
         java-version: '17' 
         distribution: 'temurin' 
         
-	# yml을 생성하는 코드 github Secret 사용
     - name: Create application.yml from secret
       run: |
         # Ensure the directory exists
