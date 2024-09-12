@@ -33,8 +33,7 @@ dependencies {
 	// 프로젝트에서 Lombok을 사용하기 위한 의존성 (코드 줄이기 위한 어노테이션 제공, 예: @Getter, @Setter)
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
-
-	implementation 'mysql:mysql-connector-java:8.0.28'
+	runtimeOnly 'com.h2database:h2'
 	// 테스트 관련 의존성들 (테스트 환경에서 다양한 테스트 도구 제공)
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'  // 기본적인 테스트 기능 제공
 	testImplementation 'org.springframework.security:spring-security-test'  // 보안 관련 테스트 지원
