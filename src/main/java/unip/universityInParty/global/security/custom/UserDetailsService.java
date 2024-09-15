@@ -6,6 +6,8 @@ import org.springframework.stereotype.Service;
 import unip.universityInParty.domain.member.dto.MemberDTO;
 import unip.universityInParty.domain.member.entity.Member;
 import unip.universityInParty.domain.member.repository.MemberRepository;
+import unip.universityInParty.global.exception.custom.CustomException;
+import unip.universityInParty.global.exception.errorCode.MemberErrorCode;
 
 @Service
 @RequiredArgsConstructor
@@ -15,7 +17,8 @@ public class UserDetailsService implements org.springframework.security.core.use
 
     @Override
     public UserDetails loadUserByUsername(String username) {
-        Member member = memberRepository.findByUsername(username);
+        Member member = memberRepository.findByUsername(username)
+            .orElseThrow(() -> new CustomException(MemberErrorCode.MEMBER_NOT_FOUND));
         MemberDTO memberDTO = MemberDTO.builder()
             .username(member.getUsername())
             .name(member.getName())

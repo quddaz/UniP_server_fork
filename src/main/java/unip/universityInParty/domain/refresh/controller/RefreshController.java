@@ -14,6 +14,7 @@ import unip.universityInParty.domain.member.repository.MemberRepository;
 import unip.universityInParty.domain.refresh.service.RefreshService;
 import unip.universityInParty.global.baseResponse.ResponseDto;
 import unip.universityInParty.global.exception.custom.CustomException;
+import unip.universityInParty.global.exception.errorCode.MemberErrorCode;
 import unip.universityInParty.global.exception.errorCode.OAuthErrorCode;
 import unip.universityInParty.global.security.jwt.JwtUtil;
 import unip.universityInParty.global.util.CookieStore;
@@ -69,7 +70,8 @@ public class RefreshController {
         }
 
         String username = jwtUtil.getUsername(refresh);
-        Member member = memberRepository.findByUsername(username);
+        Member member = memberRepository.findByUsername(username)
+            .orElseThrow(() -> new CustomException(MemberErrorCode.MEMBER_NOT_FOUND));
 
         String newAccess= jwtUtil.createAccessJwt(member.getUsername(), String.valueOf(member.getRole()), "access");
         String newRefresh = jwtUtil.createRefreshJwt(member.getUsername(), String.valueOf(member.getRole()), "refresh");

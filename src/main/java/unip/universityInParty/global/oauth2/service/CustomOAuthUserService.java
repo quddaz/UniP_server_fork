@@ -10,6 +10,8 @@ import unip.universityInParty.domain.member.dto.MemberDTO;
 import unip.universityInParty.domain.member.entity.Enum.Role;
 import unip.universityInParty.domain.member.entity.Member;
 import unip.universityInParty.domain.member.repository.MemberRepository;
+import unip.universityInParty.global.exception.custom.CustomException;
+import unip.universityInParty.global.exception.errorCode.MemberErrorCode;
 import unip.universityInParty.global.oauth2.dto.GoogleResponse;
 import unip.universityInParty.global.oauth2.dto.NaverResponse;
 import unip.universityInParty.global.oauth2.dto.OAuth2Response;
@@ -60,7 +62,8 @@ public class CustomOAuthUserService extends DefaultOAuth2UserService {
     }
 
     private Member updateOrCreateMember(String username, OAuth2Response oAuth2Response) {
-        Member member = memberRepository.findByUsername(username);
+        Member member = memberRepository.findByUsername(username)
+            .orElse(null);
 
         if (member == null) {
             // 새 사용자 생성
@@ -69,7 +72,7 @@ public class CustomOAuthUserService extends DefaultOAuth2UserService {
                 .name(oAuth2Response.getName())
                 .email(oAuth2Response.getEmail())
                 .profile_image(oAuth2Response.getProfileImage())
-                .role(Role.valueOf("ROLE_USER"))
+                .role(Role.ROLE_USER)
                 .point(0)
                 .status(false)
                 .build();
