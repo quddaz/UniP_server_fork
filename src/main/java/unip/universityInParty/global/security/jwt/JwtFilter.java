@@ -11,14 +11,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-import unip.universityInParty.domain.member.dto.MemberDTO;
-import unip.universityInParty.domain.member.entity.Member;
-import unip.universityInParty.domain.member.repository.MemberRepository;
-import unip.universityInParty.domain.member.service.MemberService;
 import unip.universityInParty.global.exception.custom.CustomException;
 import unip.universityInParty.global.exception.errorCode.MemberErrorCode;
 import unip.universityInParty.global.exception.errorCode.OAuthErrorCode;
 import unip.universityInParty.global.security.custom.CustomUserDetails;
+import unip.universityInParty.global.security.custom.CustomUserDetailsService;
 
 import java.io.IOException;
 
@@ -27,7 +24,7 @@ import java.io.IOException;
 @Slf4j
 public class JwtFilter extends OncePerRequestFilter {
     private final JwtUtil jwtUtil;
-    private final MemberService memberService;
+    private final CustomUserDetailsService userDetailsService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -65,22 +62,20 @@ public class JwtFilter extends OncePerRequestFilter {
 
         String username = jwtUtil.getUsername(accessToken);
 
-        MemberDTO memberDTO = memberService.getMemberByUsername(username);
 
         // CustomOAuth2User 객체를 생성하여 사용자 정보를 설정
-        CustomUserDetails customOAuth2User = new CustomUserDetails(memberDTO);
-
+        CustomUserDetails customUserDetails = userDetailsService.loadUserByUsername(username);
 
         Authentication authToken = new UsernamePasswordAuthenticationToken(
-            customOAuth2User,
+            customUserDetails,
             null,
-            customOAuth2User.getAuthorities()
+            customUserDetails.getAuthorities()
         );
 
 
         SecurityContextHolder.getContext().setAuthentication(authToken);
 
-        log.info("User authenticated: {}", memberDTO.getUsername());
+        log.info("User authenticated: {}", customUserDetails.getUsername());
 
         filterChain.doFilter(request, response);
     }

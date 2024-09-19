@@ -1,6 +1,7 @@
-package unip.universityInParty.domain.member.service;
+package unip.universityInParty.global.security.custom;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import unip.universityInParty.domain.member.dto.MemberDTO;
 import unip.universityInParty.domain.member.entity.Member;
@@ -10,14 +11,16 @@ import unip.universityInParty.global.exception.errorCode.MemberErrorCode;
 
 @Service
 @RequiredArgsConstructor
-public class MemberService {
+public class CustomUserDetailsService implements org.springframework.security.core.userdetails.UserDetailsService {
+
     private final MemberRepository memberRepository;
 
-    public MemberDTO getMemberByUsername(String username) {
+    @Override
+    public CustomUserDetails loadUserByUsername(String username) {
         Member member = memberRepository.findByUsername(username)
             .orElseThrow(() -> new CustomException(MemberErrorCode.MEMBER_NOT_FOUND));
 
-        return MemberDTO.builder()
+        MemberDTO memberDTO = MemberDTO.builder()
             .id(member.getId())
             .username(member.getUsername())
             .auth(member.isAuth())
@@ -26,5 +29,6 @@ public class MemberService {
             .name(member.getName())
             .status(member.getStatus())
             .build();
+        return new CustomUserDetails(memberDTO);
     }
 }
