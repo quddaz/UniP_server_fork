@@ -3,6 +3,7 @@ package unip.universityInParty.domain.member.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import unip.universityInParty.domain.member.entity.Enum.Role;
+import unip.universityInParty.domain.member.entity.Enum.Status;
 
 @Getter
 @Setter
@@ -26,7 +27,15 @@ public class Member {
 
     private String profile_image;
 
-    private boolean status;
+    private boolean auth;
 
     private int point;
+
+    @Enumerated(EnumType.STRING)
+    private Status status;
+
+
+    public void plusPoint(int point){
+        this.point += point;
+    }
 }

@@ -8,6 +8,7 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import unip.universityInParty.domain.member.dto.MemberDTO;
 import unip.universityInParty.domain.member.entity.Enum.Role;
+import unip.universityInParty.domain.member.entity.Enum.Status;
 import unip.universityInParty.domain.member.entity.Member;
 import unip.universityInParty.domain.member.repository.MemberRepository;
 import unip.universityInParty.global.exception.custom.CustomException;
@@ -74,7 +75,8 @@ public class CustomOAuthUserService extends DefaultOAuth2UserService {
                 .profile_image(oAuth2Response.getProfileImage())
                 .role(Role.ROLE_USER)
                 .point(0)
-                .status(false)
+                .auth(false)
+                .status(Status.BORED)
                 .build();
         } else {
             member.setProfile_image(oAuth2Response.getProfileImage());

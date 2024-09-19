@@ -35,24 +35,30 @@ public class JwtUtil {
 
         return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("category", String.class);
     }
-    public String createAccessJwt(String username, String role, String category) {
+    public boolean getAuth(String token) {
+
+        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("auth", boolean.class);
+    }
+    public String createAccessJwt(String username, String role, String category, boolean auth) {
 
         return Jwts.builder()
             .claim("category", category)
             .claim("username", username)
             .claim("role", role)
+            .claim("auth", auth)
             .issuedAt(new Date(System.currentTimeMillis()))
             .expiration(new Date(System.currentTimeMillis() + AccessTokenRemiteTime))
             .signWith(secretKey)
             .compact();
     }
 
-    public String createRefreshJwt(String username, String role, String category) {
+    public String createRefreshJwt(String username, String role, String category, boolean auth) {
 
         return Jwts.builder()
             .claim("category", category)
             .claim("username", username)
             .claim("role", role)
+            .claim("auth", auth)
             .issuedAt(new Date(System.currentTimeMillis()))
             .expiration(new Date(System.currentTimeMillis() + RefreshTokenRemiteTime))
             .signWith(secretKey)

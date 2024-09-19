@@ -16,10 +16,10 @@ public class Friend {
     private long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id1")
-    private Member member1;
+    @JoinColumn(name = "fromMember_id")
+    private Member fromMember;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id2")
-    private Member member2;
+    @JoinColumn(name = "toMember_id")
+    private Member toMember;
 }

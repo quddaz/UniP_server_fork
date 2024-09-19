@@ -18,10 +18,10 @@ public class AlarmDetail {
     private long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "alarm_id")  // 수신자를 명확하게
+    @JoinColumn(name = "alarm_id")
     private Alarm alarm;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "party_id")  // 수신자를 명확하게
+    @JoinColumn(name = "party_id")
     private Party party;
 }
