@@ -63,7 +63,7 @@ public class RefreshController {
             throw new CustomException(OAuthErrorCode.INVALID_REFRESH_TOKEN);
         }
         //DB에 저장되어 있는지 확인
-        Boolean isExist = refreshService.existsByRefresh(refresh);
+        Boolean isExist = refreshService.existsByToken(refresh);
         if (!isExist) {
 
             throw new CustomException(OAuthErrorCode.INVALID_REFRESH_TOKEN);
@@ -77,7 +77,7 @@ public class RefreshController {
         String newRefresh = jwtUtil.createRefreshJwt(member.getUsername(), String.valueOf(member.getRole()), "refresh", member.isAuth());
 
         //Refresh 토큰 저장 DB에 기존의 Refresh 토큰 삭제 후 새 Refresh 토큰 저장
-        refreshService.deleteByRefresh(refresh);
+        refreshService.deleteByToken(refresh);
         refreshService.addRefresh(username, newRefresh);
 
         //response

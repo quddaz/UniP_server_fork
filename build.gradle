@@ -42,14 +42,17 @@ dependencies {
 	// OAuth2 클라이언트를 사용하기 위한 의존성 (OAuth2 인증 및 권한 부여 지원)
 	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 
-	// JWT(Json Web Token) 라이브러리를 사용하기 위한 의존성들 (JWT 생성 및 검증)
+	// JWT(Json Web Token) 라이브러리를 사용하기 위한 의존성 (JWT 생성 및 검증)
 	implementation 'io.jsonwebtoken:jjwt-api:0.12.3'
 	implementation 'io.jsonwebtoken:jjwt-impl:0.12.3'
 	implementation 'io.jsonwebtoken:jjwt-jackson:0.12.3'
 
 	// 데이터베이스 쿼리 로깅을 위한 P6Spy를 사용하기 위한 의존성 (SQL 쿼리 로깅 및 분석 지원)
 	implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.9.0'
-
+	//Mail
+	implementation 'org.springframework.boot:spring-boot-starter-mail'
+	//Redis 라이브러리 사용을 위한 의존성
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 	// Querydsl 의존성
 	implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
 	annotationProcessor 'com.querydsl:querydsl-apt:5.0.0:jakarta'

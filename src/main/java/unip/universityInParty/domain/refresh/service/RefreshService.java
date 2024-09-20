@@ -7,27 +7,27 @@ import unip.universityInParty.domain.refresh.entity.Refresh;
 import unip.universityInParty.domain.refresh.repository.RefreshRepository;
 
 import java.util.Date;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class RefreshService {
     private final RefreshRepository refreshRepository;
-    private final long RefreshTokenRemiteTime = 1000L * 60 * 60 * 24; // 1일
+    private final long refreshTokenExpireTime = 86400L; // 1일
 
     @Transactional
-    public void addRefresh(String username, String refresh) {
-        Date date = new Date(System.currentTimeMillis() + RefreshTokenRemiteTime);
-        Refresh refreshEntity = Refresh.builder()
+    public void addRefresh(String username, String token) {
+        Refresh refresh = Refresh.builder()
             .username(username)
-            .refresh(refresh)
-            .expiration(date.toString())
+            .token(token)
+            .expiration(refreshTokenExpireTime) // Redis의 TTL(Time-to-live) 기능 사용
             .build();
-        refreshRepository.save(refreshEntity);
+        refreshRepository.save(refresh);
     }
 
     @Transactional(readOnly = true)
-    public Boolean existsByRefresh(String refresh) {
-        return refreshRepository.existsByRefresh(refresh);
+    public Boolean existsByToken(String token) {
+        return refreshRepository.existsByToken(token);
     }
 
     @Transactional(readOnly = true)
@@ -36,13 +36,14 @@ public class RefreshService {
     }
 
     @Transactional
-    public void deleteByRefresh(String refresh) {
-        refreshRepository.deleteByRefresh(refresh);
+    public void deleteByToken(String token) {
+        refreshRepository.deleteByToken(token);
     }
 
     @Transactional
     public void deleteByUsername(String username) {
         refreshRepository.deleteByUsername(username);
     }
-}
 
+
+}

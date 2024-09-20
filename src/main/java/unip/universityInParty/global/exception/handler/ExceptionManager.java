@@ -1,6 +1,7 @@
 package unip.universityInParty.global.exception.handler;
 
 import io.jsonwebtoken.ExpiredJwtException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -16,11 +17,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestControllerAdvice
+@Slf4j
 public class ExceptionManager {
 
     @ExceptionHandler(CustomException.class)
-    public ResponseEntity<ResponseDto<?>> appExceptionHandler(CustomException e) {
+    public ResponseEntity<ResponseDto<?>> CustomExceptionHandler(CustomException e) {
         ErrorCode errorCode = e.getErrorCode();
+        log.info("ErrorMessage = {}", errorCode.getMessage());
         ResponseDto<?> response = ResponseDto.fail(errorCode.getHttpStatus().value(), errorCode.getMessage() + " " + e.getMessage());
         return ResponseEntity.status(errorCode.getHttpStatus()).body(response);
     }

@@ -44,20 +44,24 @@ public class JwtFilter extends OncePerRequestFilter {
 
         // AccessToken이 없거나, 만료된 경우
         if (accessToken == null) {
-            throw new CustomException(OAuthErrorCode.INVALID_ACCESS_TOKEN);
+            filterChain.doFilter(request, response);
+            return;
         }
         if (jwtUtil.isExpired(accessToken)) {
-            throw new CustomException(OAuthErrorCode.ACCESS_TOKEN_EXPIRED);
+            filterChain.doFilter(request, response);
+            return;
         }
 
         // 카테고리가 Access인지 확인
         if (!"access".equals(jwtUtil.getCategory(accessToken))) {
-            throw new CustomException(OAuthErrorCode.INVALID_ACCESS_TOKEN);
+            filterChain.doFilter(request, response);
+            return;
         }
 
         // 학교 인증을 했는지 확인
         if(!jwtUtil.getAuth(accessToken)){
-            throw new CustomException(MemberErrorCode.NO_UNI_VERIFICATION_ACCESS);
+            filterChain.doFilter(request, response);
+            return;
         }
 
         String username = jwtUtil.getUsername(accessToken);

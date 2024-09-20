@@ -13,7 +13,7 @@ import java.util.Optional;
 public interface PartyRepository extends JpaRepository<Party, Long> {
 
     Optional<Party> findById(Long id);
-    @Query("SELECT new unip.universityInParty.domain.party.dto.response.PartyDetailDto(p.title, p.content, p.limit, p.peopleCount, p.startTime, p.endTime) " +
+    @Query("SELECT new unip.universityInParty.domain.party.dto.response.PartyDetailDto(p.title, p.content, p.partyLimit, p.peopleCount, p.startTime, p.endTime) " +
         "FROM Party p WHERE p.id = :id")
     PartyDetailDto findPartyDetailById(@Param("id") Long id);
 }

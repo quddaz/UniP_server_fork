@@ -23,7 +23,8 @@ public class Party {
 
     private String content;
 
-    private int limit;
+    private int partyLimit;
+
     private int peopleCount;
 
     private LocalDateTime startTime; // LocalDateTime 사용
@@ -35,7 +36,7 @@ public class Party {
     private Member member;
 
     public boolean isPartyFull() {
-        return peopleCount >= limit;
+        return peopleCount >= partyLimit;
     }
 
     public void joinParty() {

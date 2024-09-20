@@ -26,11 +26,11 @@ public class PartyService {
     private final PartyRepository partyRepository;
     private final MemberRepository memberRepository;
     private final CourseService courseService;
+
+
     public PartyDetailDto getPartyDetailById(Long id){
         return partyRepository.findPartyDetailById(id);
     }
-
-
 
     @Transactional
     public void create(PartyDto partyDto, String username, List<CourseDto> courseDtos){
@@ -39,7 +39,7 @@ public class PartyService {
         Party party = Party.builder()
             .title(partyDto.getTitle())
             .content(partyDto.getContent())
-            .limit(partyDto.getLimit())
+            .partyLimit(partyDto.getLimit())
             .peopleCount(0)
             .startTime(partyDto.getStartTime())
             .endTime(partyDto.getEndTime())
@@ -75,7 +75,7 @@ public class PartyService {
         if (party.getMember().equals(member)) {
             party.setTitle(partyDto.getTitle());
             party.setContent(partyDto.getContent());
-            party.setLimit(partyDto.getLimit());
+            party.setPartyLimit(partyDto.getLimit());
             party.setStartTime(partyDto.getStartTime());
             party.setEndTime(partyDto.getEndTime());
             partyRepository.save(party);

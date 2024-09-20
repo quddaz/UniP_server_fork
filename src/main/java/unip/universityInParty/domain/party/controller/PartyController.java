@@ -15,7 +15,7 @@ import unip.universityInParty.global.security.custom.CustomUserDetails;
 import java.util.List;
 
 @RestController
-@RequestMapping("/course")
+@RequestMapping("/party")
 @RequiredArgsConstructor
 public class PartyController {
     private final PartyService partyService;
