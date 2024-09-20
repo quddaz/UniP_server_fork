@@ -2,23 +2,24 @@ package unip.universityInParty.domain.universityVerification.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.redis.core.RedisHash;
+import org.springframework.data.redis.core.TimeToLive;
 import unip.universityInParty.domain.member.entity.Member;
 
 @Getter
 @Setter
-@Entity
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@RedisHash(value = "university_verification")
 public class UniversityVerification {
     @Id
-    @GeneratedValue
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
-    private Member member;
+    private String email;
 
     private String authCode;
 
+    @TimeToLive
+    private long expiration;
 }
