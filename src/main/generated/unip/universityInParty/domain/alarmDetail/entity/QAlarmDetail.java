@@ -26,7 +26,7 @@ public class QAlarmDetail extends EntityPathBase<AlarmDetail> {
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
-    public final unip.universityInParty.domain.party.entity.QParty party;
+    public final NumberPath<Long> party = createNumber("party", Long.class);
 
     public QAlarmDetail(String variable) {
         this(AlarmDetail.class, forVariable(variable), INITS);
@@ -46,8 +46,7 @@ public class QAlarmDetail extends EntityPathBase<AlarmDetail> {
 
     public QAlarmDetail(Class<? extends AlarmDetail> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.alarm = inits.isInitialized("alarm") ? new unip.universityInParty.domain.alarm.entity.QAlarm(forProperty("alarm"), inits.get("alarm")) : null;
-        this.party = inits.isInitialized("party") ? new unip.universityInParty.domain.party.entity.QParty(forProperty("party"), inits.get("party")) : null;
+        this.alarm = inits.isInitialized("alarm") ? new unip.universityInParty.domain.alarm.entity.QAlarm(forProperty("alarm")) : null;
     }
 
 }

@@ -21,7 +21,6 @@ public class AlarmDetail {
     @JoinColumn(name = "alarm_id")
     private Alarm alarm;
 
-    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "party_id")
-    private Party party;
+    private Long party;
 }

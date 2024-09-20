@@ -11,7 +11,7 @@ import unip.universityInParty.domain.member.entity.Member;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@RedisHash(value = "university_verification")
+@RedisHash(value = "universityVerification")
 public class UniversityVerification {
     @Id
     private Long id;
