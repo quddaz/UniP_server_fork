@@ -12,7 +12,7 @@ import unip.universityInParty.domain.member.entity.Member;
 @Builder
 public class Friend {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     @ManyToOne(fetch = FetchType.LAZY)

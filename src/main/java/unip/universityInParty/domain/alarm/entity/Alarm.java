@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 @Builder
 public class Alarm {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     @Column(name = "receiver_id", nullable = false)

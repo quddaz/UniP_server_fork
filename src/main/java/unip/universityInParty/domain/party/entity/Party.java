@@ -16,7 +16,7 @@ import java.util.Date;
 @Builder
 public class Party {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     private String title;

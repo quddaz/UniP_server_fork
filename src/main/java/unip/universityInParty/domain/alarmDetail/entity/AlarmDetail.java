@@ -14,7 +14,7 @@ import unip.universityInParty.domain.party.entity.Party;
 @Builder
 public class AlarmDetail {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     @ManyToOne(fetch = FetchType.LAZY)

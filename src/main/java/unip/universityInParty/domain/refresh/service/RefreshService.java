@@ -6,8 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import unip.universityInParty.domain.refresh.entity.Refresh;
 import unip.universityInParty.domain.refresh.repository.RefreshRepository;
 
-import java.util.Date;
-import java.util.Optional;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -45,5 +44,6 @@ public class RefreshService {
         refreshRepository.deleteByUsername(username);
     }
 
+    public List<Refresh> get(){return refreshRepository.findAll();}
 
 }

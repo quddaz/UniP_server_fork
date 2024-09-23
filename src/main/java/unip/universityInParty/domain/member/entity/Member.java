@@ -13,7 +13,7 @@ import unip.universityInParty.domain.member.entity.Enum.Status;
 @Builder
 public class Member {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String username;

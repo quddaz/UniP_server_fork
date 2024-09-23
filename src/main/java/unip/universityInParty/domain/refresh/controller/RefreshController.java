@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import unip.universityInParty.domain.member.entity.Member;
@@ -30,6 +31,7 @@ public class RefreshController {
     private final CookieStore cookieStore;
     private final RefreshService refreshService;
     private final MemberRepository memberRepository;
+
     @PostMapping("/refresh")
     public ResponseEntity<?> refresh(HttpServletRequest request, HttpServletResponse response) {
         log.info("리프레쉬 재발급");

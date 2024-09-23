@@ -13,7 +13,7 @@ import unip.universityInParty.domain.party.entity.Party;
 @Builder
 public class Course {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     private String address;
