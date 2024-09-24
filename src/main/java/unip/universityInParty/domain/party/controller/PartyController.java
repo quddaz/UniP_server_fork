@@ -2,6 +2,7 @@ package unip.universityInParty.domain.party.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +18,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/party")
 @RequiredArgsConstructor
+@Slf4j
 public class PartyController {
     private final PartyService partyService;
 
@@ -27,10 +29,10 @@ public class PartyController {
     }
 
     @PostMapping()
-    public ResponseEntity<?> createParty(@Valid @RequestPart("party") PartyDto partyDto,
-                                         @Valid @RequestPart("course") List<CourseDto> courseDtos,
+    public ResponseEntity<?> createParty(@Valid @RequestBody PartyDto partyDto,
                                          @AuthenticationPrincipal CustomUserDetails customUserDetails){
-        partyService.create(partyDto, customUserDetails.getUsername(), courseDtos);
+        log.info("usaername={}",customUserDetails.getUsername());
+        partyService.create(partyDto, customUserDetails.getUsername(), partyDto.getCourses());
         return ResponseEntity.ok().body(ResponseDto.of("파티 생성 성공", null));
     }
 
@@ -43,10 +45,9 @@ public class PartyController {
 
     @PutMapping("/{id}")
     public ResponseEntity<?> updateParty(@PathVariable Long id,
-                                         @Valid @RequestPart("party") PartyDto partyDto,
-                                         @Valid @RequestPart("course") List<CourseDto> courseDtos,
+                                         @Valid @RequestBody PartyDto partyDto,
                                          @AuthenticationPrincipal CustomUserDetails customUserDetails){
-        partyService.update(id, partyDto, customUserDetails.getUsername(), courseDtos);
+        partyService.update(id, partyDto, customUserDetails.getUsername(), partyDto.getCourses());
         return ResponseEntity.ok().body(ResponseDto.of("파티 업데이트 성공", null));
     }
 

@@ -31,7 +31,10 @@ public class RefreshController {
     private final CookieStore cookieStore;
     private final RefreshService refreshService;
     private final MemberRepository memberRepository;
-
+    @GetMapping("/refresh")
+    public ResponseEntity<?> get(){
+        return ResponseEntity.ok().body(ResponseDto.of("조회 성공", refreshService.get()));
+    }
     @PostMapping("/refresh")
     public ResponseEntity<?> refresh(HttpServletRequest request, HttpServletResponse response) {
         log.info("리프레쉬 재발급");

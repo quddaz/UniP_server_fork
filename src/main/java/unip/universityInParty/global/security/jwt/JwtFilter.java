@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -31,11 +32,7 @@ public class JwtFilter extends OncePerRequestFilter {
         // 요청 URL을 가져와서 로깅
         String requestUri = request.getRequestURI();
 
-        if (requestUri.matches("^\\/login(?:\\/.*)?$")) {
-            filterChain.doFilter(request, response);
-            return;
-        }
-        if (requestUri.matches("^\\/oauth2(?:\\/.*)?$")) {
+        if (requestUri.matches("^\\/login(?:\\/.*)?$") || requestUri.matches("^\\/oauth2(?:\\/.*)?$")) {
             filterChain.doFilter(request, response);
             return;
         }
@@ -44,23 +41,30 @@ public class JwtFilter extends OncePerRequestFilter {
 
         // AccessToken이 없거나, 만료된 경우
         if (accessToken == null) {
-            filterChain.doFilter(request, response);
+            log.warn("Access token is missing");
+            response.setStatus(HttpStatus.UNAUTHORIZED.value());
             return;
         }
+
+        // 만료된 토큰 확인
         if (jwtUtil.isExpired(accessToken)) {
-            filterChain.doFilter(request, response);
+            log.warn("Access token has expired");
+            response.setStatus(HttpStatus.UNAUTHORIZED.value());
             return;
         }
 
         // 카테고리가 Access인지 확인
         if (!"access".equals(jwtUtil.getCategory(accessToken))) {
-            filterChain.doFilter(request, response);
+            log.info("category={}", jwtUtil.getCategory(accessToken));
+            log.warn("Invalid token category");
+            response.setStatus(HttpStatus.UNAUTHORIZED.value());
             return;
         }
 
         // 학교 인증을 했는지 확인
         if(!jwtUtil.getAuth(accessToken)){
             filterChain.doFilter(request, response);
+            response.setStatus(HttpStatus.CONFLICT.value());
             return;
         }
 

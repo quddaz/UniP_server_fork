@@ -37,7 +37,7 @@ public class JwtUtil {
     }
     public boolean getAuth(String token) {
 
-        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("auth", boolean.class);
+        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("auth", Boolean.class);
     }
     public String createAccessJwt(String username, String role, String category, boolean auth) {
 
