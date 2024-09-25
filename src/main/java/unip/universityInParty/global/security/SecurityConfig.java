@@ -12,10 +12,8 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import unip.universityInParty.global.oauth2.service.CustomOAuthUserService;
-import unip.universityInParty.global.security.custom.CustomFailureHandler;
 import unip.universityInParty.global.security.custom.CustomSuccessHandler;
 import unip.universityInParty.global.security.jwt.JwtFilter;
-import unip.universityInParty.global.security.jwt.JwtUtil;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -27,7 +25,6 @@ public class SecurityConfig {
 
     private final CustomSuccessHandler customSuccessHandler; // 인증 성공 시 처리할 커스텀 핸들러
     private final CustomOAuthUserService customOAuthUserService; // OAuth2 사용자 정보 서비스
-    private final CustomFailureHandler customFailureHandler;
     private final JwtFilter jwtFilter; // JWT 필터
 
     @Bean
@@ -95,7 +92,6 @@ public class SecurityConfig {
                 .userInfoEndpoint(userInfoEndpointConfig -> userInfoEndpointConfig
                     .userService(customOAuthUserService))
                 .successHandler(customSuccessHandler) // 커스텀 성공 핸들러 설정
-                .failureHandler(customFailureHandler)
             );
 
         // 요청 권한 설정
@@ -103,7 +99,7 @@ public class SecurityConfig {
         // 나머지 모든 요청은 인증된 사용자만 접근할 수 있도록 설정합니다.
         http
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/login/oauth2/code/**", "/refresh/**", "/api/**").permitAll() // 로그인 및 리프레시 경로를 인증 없이 접근 허용
+                .requestMatchers("/login/oauth2/code/**", "/refresh", "/api/**").permitAll() // 로그인 및 리프레시 경로를 인증 없이 접근 허용
                 .anyRequest().authenticated()); // 나머지 모든 요청은 인증된 사용자만 접근 허용
 
         // 세션 관리 설정: STATELESS

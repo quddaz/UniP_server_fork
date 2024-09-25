@@ -45,11 +45,4 @@ public class ExceptionManager {
 
         return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(response);
     }
-
-    @ExceptionHandler(ExpiredJwtException.class)
-    @ResponseBody
-    public ResponseEntity<String> handleExpiredJwtException(ExpiredJwtException ex) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-            .body("JWT Token has expired");
-    }
 }

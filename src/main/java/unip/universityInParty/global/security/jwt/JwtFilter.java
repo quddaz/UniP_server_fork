@@ -32,32 +32,30 @@ public class JwtFilter extends OncePerRequestFilter {
         // 요청 URL을 가져와서 로깅
         String requestUri = request.getRequestURI();
 
-        if (requestUri.matches("^\\/login(?:\\/.*)?$") || requestUri.matches("^\\/oauth2(?:\\/.*)?$")) {
+        if (requestUri.matches("^\\/login(?:\\/.*)?$") ||
+            requestUri.matches("^\\/oauth2(?:\\/.*)?$") ||
+            requestUri.matches("^\\/refresh(?:\\/.*)?$") ||
+            requestUri.matches("^\\/api(?:\\/.*)?$")) {
             filterChain.doFilter(request, response);
             return;
         }
-
         String accessToken = request.getHeader("access");
 
         // AccessToken이 없거나, 만료된 경우
         if (accessToken == null) {
-            log.warn("Access token is missing");
-            response.setStatus(HttpStatus.UNAUTHORIZED.value());
+            response.sendError(HttpStatus.UNAUTHORIZED.value(), "Access token is missing");
             return;
         }
 
         // 만료된 토큰 확인
         if (jwtUtil.isExpired(accessToken)) {
-            log.warn("Access token has expired");
-            response.setStatus(HttpStatus.UNAUTHORIZED.value());
+            response.sendError(HttpStatus.UNAUTHORIZED.value(), "Access token has expired");
             return;
         }
 
         // 카테고리가 Access인지 확인
         if (!"access".equals(jwtUtil.getCategory(accessToken))) {
-            log.info("category={}", jwtUtil.getCategory(accessToken));
-            log.warn("Invalid token category");
-            response.setStatus(HttpStatus.UNAUTHORIZED.value());
+            response.sendError(HttpStatus.UNAUTHORIZED.value(), "Invalid token category");
             return;
         }
 
