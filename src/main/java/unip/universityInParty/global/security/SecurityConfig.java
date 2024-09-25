@@ -12,6 +12,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import unip.universityInParty.global.oauth2.service.CustomOAuthUserService;
+import unip.universityInParty.global.security.custom.CustomFailureHandler;
 import unip.universityInParty.global.security.custom.CustomSuccessHandler;
 import unip.universityInParty.global.security.jwt.JwtFilter;
 import unip.universityInParty.global.security.jwt.JwtUtil;
@@ -26,6 +27,7 @@ public class SecurityConfig {
 
     private final CustomSuccessHandler customSuccessHandler; // 인증 성공 시 처리할 커스텀 핸들러
     private final CustomOAuthUserService customOAuthUserService; // OAuth2 사용자 정보 서비스
+    private final CustomFailureHandler customFailureHandler;
     private final JwtFilter jwtFilter; // JWT 필터
 
     @Bean
@@ -93,6 +95,7 @@ public class SecurityConfig {
                 .userInfoEndpoint(userInfoEndpointConfig -> userInfoEndpointConfig
                     .userService(customOAuthUserService))
                 .successHandler(customSuccessHandler) // 커스텀 성공 핸들러 설정
+                .failureHandler(customFailureHandler)
             );
 
         // 요청 권한 설정

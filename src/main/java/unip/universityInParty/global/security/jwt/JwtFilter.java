@@ -61,13 +61,6 @@ public class JwtFilter extends OncePerRequestFilter {
             return;
         }
 
-        // 학교 인증을 했는지 확인
-        if(!jwtUtil.getAuth(accessToken)){
-            filterChain.doFilter(request, response);
-            response.setStatus(HttpStatus.CONFLICT.value());
-            return;
-        }
-
         String username = jwtUtil.getUsername(accessToken);
 
 

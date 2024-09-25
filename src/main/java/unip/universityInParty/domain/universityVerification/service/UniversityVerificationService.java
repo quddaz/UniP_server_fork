@@ -96,7 +96,7 @@ public class UniversityVerificationService {
     public void verifyAuthCode(String email, String code, Long id) {
         UniversityVerification verification = universityVerificationRepository.findByEmail(email)
             .orElseThrow(() -> new CustomException(MemberErrorCode.UNIVERSITY_VERIFICATION_NOT_FOUND));
-
+        log.info("Code = {} , AuthCode = {}", code, verification.getAuthCode());
         if (verification.getAuthCode().equals(code)) {
             Member member = memberRepository.findById(id)
                 .orElseThrow(() -> new CustomException(MemberErrorCode.MEMBER_NOT_FOUND));
@@ -106,5 +106,7 @@ public class UniversityVerificationService {
             throw new CustomException(MemberErrorCode.INVALID_AUTH_CODE);
         }
     }
+
+
 }
 
