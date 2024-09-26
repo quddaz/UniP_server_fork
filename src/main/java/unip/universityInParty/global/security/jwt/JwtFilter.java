@@ -1,5 +1,6 @@
 package unip.universityInParty.global.security.jwt;
 
+import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -19,6 +20,7 @@ import unip.universityInParty.global.security.custom.CustomUserDetails;
 import unip.universityInParty.global.security.custom.CustomUserDetailsService;
 
 import java.io.IOException;
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -27,56 +29,65 @@ public class JwtFilter extends OncePerRequestFilter {
     private final JwtUtil jwtUtil;
     private final CustomUserDetailsService userDetailsService;
 
+    private static final List<String> EXCLUDED_PATHS = List.of(
+        "^\\/login(?:\\/.*)?$",
+        "^\\/oauth2(?:\\/.*)?$",
+        "^\\/refresh(?:\\/.*)?$",
+        "^\\/api(?:\\/.*)?$"
+    );
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        // 요청 URL을 가져와서 로깅
         String requestUri = request.getRequestURI();
 
-        if (requestUri.matches("^\\/login(?:\\/.*)?$") ||
-            requestUri.matches("^\\/oauth2(?:\\/.*)?$") ||
-            requestUri.matches("^\\/refresh(?:\\/.*)?$") ||
-            requestUri.matches("^\\/api(?:\\/.*)?$")) {
+        // 필터 제외 경로 처리
+        if (isExcludedPath(requestUri)) {
             filterChain.doFilter(request, response);
             return;
         }
+
+        try {
+            String accessToken = getAccessToken(request);
+            validateToken(accessToken);
+            setAuthentication(accessToken);
+            log.info("User authenticated: {}", jwtUtil.getUsername(accessToken));
+            filterChain.doFilter(request, response);
+        } catch (JwtException e) {
+            response.sendError(HttpStatus.UNAUTHORIZED.value(), e.getMessage());
+        }
+    }
+
+    private boolean isExcludedPath(String requestUri) {
+        return EXCLUDED_PATHS.stream().anyMatch(requestUri::matches);
+    }
+
+    private String getAccessToken(HttpServletRequest request) throws JwtException {
         String accessToken = request.getHeader("access");
-
-        // AccessToken이 없거나, 만료된 경우
         if (accessToken == null) {
-            response.sendError(HttpStatus.UNAUTHORIZED.value(), "Access token is missing");
-            return;
+            throw new JwtException("Access token is missing");
         }
+        return accessToken;
+    }
 
-        // 만료된 토큰 확인
+    private void validateToken(String accessToken) throws JwtException {
         if (jwtUtil.isExpired(accessToken)) {
-            response.sendError(HttpStatus.UNAUTHORIZED.value(), "Access token has expired");
-            return;
+            throw new JwtException("Access token has expired");
         }
 
-        // 카테고리가 Access인지 확인
         if (!"access".equals(jwtUtil.getCategory(accessToken))) {
-            response.sendError(HttpStatus.UNAUTHORIZED.value(), "Invalid token category");
-            return;
+            throw new JwtException("Invalid token category");
         }
+    }
 
+    private void setAuthentication(String accessToken) {
         String username = jwtUtil.getUsername(accessToken);
-
-
-        // CustomOAuth2User 객체를 생성하여 사용자 정보를 설정
         CustomUserDetails customUserDetails = userDetailsService.loadUserByUsername(username);
 
         Authentication authToken = new UsernamePasswordAuthenticationToken(
-            customUserDetails,
-            null,
-            customUserDetails.getAuthorities()
+            customUserDetails, null, customUserDetails.getAuthorities()
         );
-
-
         SecurityContextHolder.getContext().setAuthentication(authToken);
-
-        log.info("User authenticated: {}", customUserDetails.getUsername());
-
-        filterChain.doFilter(request, response);
     }
 }
+
 

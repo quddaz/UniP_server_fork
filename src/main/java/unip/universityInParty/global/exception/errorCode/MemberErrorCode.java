@@ -3,10 +3,11 @@ package unip.universityInParty.global.exception.errorCode;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
+import unip.universityInParty.global.exception.errorCode.base.ErrorCode;
 
 @AllArgsConstructor
 @Getter
-public enum MemberErrorCode implements ErrorCode{
+public enum MemberErrorCode implements ErrorCode {
     MEMBER_NOT_FOUND(HttpStatus.BAD_REQUEST, "유저를 찾을 수 없습니다."),
     NO_UNI_VERIFICATION_ACCESS(HttpStatus.CONFLICT, "학교 인증이 필요합니다."),
     ALREADY_UNI_VERIFICATION(HttpStatus.BAD_REQUEST, "이미 학교인증이 완료되었습니다."),

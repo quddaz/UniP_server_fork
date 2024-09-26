@@ -1,4 +1,4 @@
-package unip.universityInParty.global.exception.errorCode;
+package unip.universityInParty.global.exception.errorCode.base;
 
 import org.springframework.http.HttpStatus;
 

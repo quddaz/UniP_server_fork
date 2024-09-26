@@ -33,14 +33,14 @@ public class PartyService {
     }
 
     @Transactional
-    public void create(PartyDto partyDto, String username, List<CourseDto> courseDtos){
+    public Party create(PartyDto partyDto, String username, List<CourseDto> courseDtos){
         Member member = memberRepository.findByUsername(username)
             .orElseThrow(() -> new CustomException(MemberErrorCode.MEMBER_NOT_FOUND));
         Party party = Party.builder()
             .title(partyDto.getTitle())
             .content(partyDto.getContent())
             .partyLimit(partyDto.getLimit())
-            .peopleCount(0)
+            .peopleCount(1)
             .startTime(partyDto.getStartTime())
             .endTime(partyDto.getEndTime())
             .member(member)
@@ -49,6 +49,8 @@ public class PartyService {
 
         // Courses 저장
         courseService.create(courseDtos, savedParty);
+
+        return savedParty;
     }
     @Transactional
     public void delete(Long partyId, String username){

@@ -9,7 +9,10 @@ import org.springframework.web.bind.annotation.*;
 import unip.universityInParty.domain.course.dto.CourseDto;
 import unip.universityInParty.domain.party.dto.request.PartyDto;
 import unip.universityInParty.domain.party.dto.response.PartyDetailDto;
+import unip.universityInParty.domain.party.entity.Party;
 import unip.universityInParty.domain.party.service.PartyService;
+import unip.universityInParty.domain.pmList.entity.Enum.PartyRole;
+import unip.universityInParty.domain.pmList.service.PMListService;
 import unip.universityInParty.global.baseResponse.ResponseDto;
 import unip.universityInParty.global.security.custom.CustomUserDetails;
 
@@ -21,7 +24,7 @@ import java.util.List;
 @Slf4j
 public class PartyController {
     private final PartyService partyService;
-
+    private final PMListService pmListService;
     @GetMapping("/{id}")
     public ResponseEntity<?> getPartyById(@PathVariable Long id){
         PartyDetailDto partyDetailDto = partyService.getPartyDetailById(id);
@@ -31,9 +34,9 @@ public class PartyController {
     @PostMapping()
     public ResponseEntity<?> createParty(@Valid @RequestBody PartyDto partyDto,
                                          @AuthenticationPrincipal CustomUserDetails customUserDetails){
-        log.info("usaername={}",customUserDetails.getUsername());
-        partyService.create(partyDto, customUserDetails.getUsername(), partyDto.getCourses());
-        return ResponseEntity.ok().body(ResponseDto.of("파티 생성 성공", null));
+        Party party =partyService.create(partyDto, customUserDetails.getUsername(), partyDto.getCourses());
+        pmListService.createJoinParty(PartyRole.MASTER, customUserDetails.getUsername(), party.getId());
+        return ResponseEntity.ok().body(ResponseDto.of("파티 생성 성공", party.getId()));
     }
 
     @DeleteMapping("/{id}")
