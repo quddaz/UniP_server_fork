@@ -1,6 +1,7 @@
 package unip.universityInParty.global.security.custom;
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -15,6 +16,8 @@ import unip.universityInParty.global.security.jwt.JwtUtil;
 import unip.universityInParty.global.util.CookieStore;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 @Component
 @RequiredArgsConstructor
@@ -32,19 +35,28 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         String username = customUserDetails.getUsername();
         String role = customUserDetails.getAuthorities().iterator().next().getAuthority();
 
-        String AccessToken = jwtUtil.createAccessJwt(username, role, "access", customUserDetails.getAuth());
-        String RefreshToken = jwtUtil.createRefreshJwt(username, role, "refresh", customUserDetails.getAuth());
+        String accessToken = jwtUtil.createAccessJwt(username, role, "access", customUserDetails.getAuth());
+        String refreshToken = jwtUtil.createRefreshJwt(username, role, "refresh", customUserDetails.getAuth());
 
-        if(refreshService.existsByUsername(username)){
+        if (refreshService.existsByUsername(username)) {
             refreshService.deleteByUsername(username);
         }
 
-        refreshService.addRefresh(username,RefreshToken);
-        log.info("AccessToken = {}", AccessToken);
-        response.setHeader("access", AccessToken);
-        Cookie cookie = cookieStore.createCookie(RefreshToken);
+        refreshService.addRefresh(username, refreshToken);
+        log.info("AccessToken = {}", accessToken);
+
+        Map<String, String> tokenMap = new HashMap<>();
+        tokenMap.put("accessToken", accessToken);
+
+        Cookie cookie = cookieStore.createCookie(refreshToken);
         response.addCookie(cookie);
 
-        response.sendRedirect("http://localhost:3000/redirect");
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        String jsonResponse = objectMapper.writeValueAsString(tokenMap);
+
+        response.getWriter().write(jsonResponse);
     }
 }

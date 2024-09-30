@@ -29,22 +29,10 @@ public class JwtFilter extends OncePerRequestFilter {
     private final JwtUtil jwtUtil;
     private final CustomUserDetailsService userDetailsService;
 
-    private static final List<String> EXCLUDED_PATHS = List.of(
-        "^\\/login(?:\\/.*)?$",
-        "^\\/oauth2(?:\\/.*)?$",
-        "^\\/refresh(?:\\/.*)?$",
-        "^\\/api(?:\\/.*)?$"
-    );
-
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String requestUri = request.getRequestURI();
 
-        // 필터 제외 경로 처리
-        if (isExcludedPath(requestUri)) {
-            filterChain.doFilter(request, response);
-            return;
-        }
 
         try {
             String accessToken = getAccessToken(request);
@@ -55,10 +43,6 @@ public class JwtFilter extends OncePerRequestFilter {
         } catch (JwtException e) {
             response.sendError(HttpStatus.UNAUTHORIZED.value(), e.getMessage());
         }
-    }
-
-    private boolean isExcludedPath(String requestUri) {
-        return EXCLUDED_PATHS.stream().anyMatch(requestUri::matches);
     }
 
     private String getAccessToken(HttpServletRequest request) throws JwtException {
