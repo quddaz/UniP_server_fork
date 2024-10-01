@@ -38,6 +38,8 @@ public class QParty extends EntityPathBase<Party> {
 
     public final StringPath title = createString("title");
 
+    public final NumberPath<Integer> version = createNumber("version", Integer.class);
+
     public QParty(String variable) {
         this(Party.class, forVariable(variable), INITS);
     }
