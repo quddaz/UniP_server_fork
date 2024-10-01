@@ -2,13 +2,13 @@ package unip.universityInParty.domain.universityVerification.dto;
 
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Getter
-@AllArgsConstructor
-@NoArgsConstructor
-public class UvRequestDTO {
-    @NotEmpty
-    private String email;
+
+@Builder
+public record UvRequestDTO(
+    @NotEmpty String email // 이메일 필드
+) {
 }

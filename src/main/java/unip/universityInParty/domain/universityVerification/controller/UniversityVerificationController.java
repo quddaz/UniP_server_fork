@@ -19,7 +19,7 @@ public class UniversityVerificationController {
     private final UniversityVerificationService universityVerificationService;
     @PostMapping()
     public ResponseEntity<?> createVerification(@RequestBody @Valid UvRequestDTO uvRequestDTO){
-        universityVerificationService.sendVerificationEmail(uvRequestDTO.getEmail());
+        universityVerificationService.sendVerificationEmail(uvRequestDTO.email());
         return ResponseEntity.ok().body(ResponseDto.of(
             "인증 코드 생성 성공",
             null
@@ -27,7 +27,7 @@ public class UniversityVerificationController {
     }
     @PostMapping("/re")
     public ResponseEntity<?> reVerification(@RequestBody @Valid UvRequestDTO uvRequestDTO){
-        universityVerificationService.reRequest(uvRequestDTO.getEmail());
+        universityVerificationService.reRequest(uvRequestDTO.email());
         return ResponseEntity.ok().body(ResponseDto.of(
             "인증 코드 재생성 성공",
             null
@@ -36,7 +36,7 @@ public class UniversityVerificationController {
     @PostMapping("/au")
     public ResponseEntity<?> verification(@RequestBody @Valid UvValidRequestDTO uvValidRequestDTO,
         @AuthenticationPrincipal CustomUserDetails customUserDetails){
-        universityVerificationService.verifyAuthCode(uvValidRequestDTO.getEmail(),uvValidRequestDTO.getAuthCode(), customUserDetails.getId());
+        universityVerificationService.verifyAuthCode(uvValidRequestDTO.email(),uvValidRequestDTO.authCode(), customUserDetails.getId());
         return ResponseEntity.ok().body(ResponseDto.of(
             "인증 성공",
             null

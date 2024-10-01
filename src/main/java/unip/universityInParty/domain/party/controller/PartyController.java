@@ -34,7 +34,7 @@ public class PartyController {
     @PostMapping()
     public ResponseEntity<?> createParty(@Valid @RequestBody PartyDto partyDto,
                                          @AuthenticationPrincipal CustomUserDetails customUserDetails){
-        Party party =partyService.create(partyDto, customUserDetails.getUsername(), partyDto.getCourses());
+        Party party =partyService.create(partyDto, customUserDetails.getUsername(), partyDto.courses());
         pmListService.createJoinParty(PartyRole.MASTER, customUserDetails.getUsername(), party.getId());
         return ResponseEntity.ok().body(ResponseDto.of("파티 생성 성공", party.getId()));
     }
@@ -50,7 +50,7 @@ public class PartyController {
     public ResponseEntity<?> updateParty(@PathVariable Long id,
                                          @Valid @RequestBody PartyDto partyDto,
                                          @AuthenticationPrincipal CustomUserDetails customUserDetails){
-        partyService.update(id, partyDto, customUserDetails.getUsername(), partyDto.getCourses());
+        partyService.update(id, partyDto, customUserDetails.getUsername(), partyDto.courses());
         return ResponseEntity.ok().body(ResponseDto.of("파티 업데이트 성공", null));
     }
 

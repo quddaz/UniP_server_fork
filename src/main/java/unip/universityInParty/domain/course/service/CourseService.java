@@ -40,8 +40,8 @@ public class CourseService {
     private void saveCourses(List<CourseDto> courseDtoList, Party party) {
         List<Course> courses = courseDtoList.stream()
             .map(courseDto -> Course.builder()
-                .address(courseDto.getAddress())
-                .title(courseDto.getTitle())
+                .address(courseDto.address())
+                .title(courseDto.title())
                 .party(party)
                 .build())
             .collect(Collectors.toList());

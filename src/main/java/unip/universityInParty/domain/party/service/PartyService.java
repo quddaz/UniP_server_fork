@@ -37,12 +37,12 @@ public class PartyService {
         Member member = memberRepository.findByUsername(username)
             .orElseThrow(() -> new CustomException(MemberErrorCode.MEMBER_NOT_FOUND));
         Party party = Party.builder()
-            .title(partyDto.getTitle())
-            .content(partyDto.getContent())
-            .partyLimit(partyDto.getLimit())
+            .title(partyDto.title())
+            .content(partyDto.content())
+            .partyLimit(partyDto.limit())
             .peopleCount(1)
-            .startTime(partyDto.getStartTime())
-            .endTime(partyDto.getEndTime())
+            .startTime(partyDto.startTime())
+            .endTime(partyDto.endTime())
             .member(member)
             .build();
         Party savedParty = partyRepository.save(party);
@@ -75,11 +75,11 @@ public class PartyService {
             .orElseThrow(() -> new CustomException(MemberErrorCode.MEMBER_NOT_FOUND));
         // 해당 파티가 현재 사용자에 의해 소유되고 있는지 확인
         if (party.getMember().equals(member)) {
-            party.setTitle(partyDto.getTitle());
-            party.setContent(partyDto.getContent());
-            party.setPartyLimit(partyDto.getLimit());
-            party.setStartTime(partyDto.getStartTime());
-            party.setEndTime(partyDto.getEndTime());
+            party.setTitle(partyDto.title());
+            party.setContent(partyDto.content());
+            party.setPartyLimit(partyDto.limit());
+            party.setStartTime(partyDto.startTime());
+            party.setEndTime(partyDto.endTime());
             partyRepository.save(party);
             // Courses 업데이트
             courseService.update(courseDtos, party);
