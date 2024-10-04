@@ -1,13 +1,27 @@
 package unip.universityInParty.domain.alarm.dto.response;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 
 @Builder
+@Schema(description = "알림 조회 DTO")
 public record AlarmResponseDTO(
+    @Schema(description = "알림 ID", example = "1")
     long id,
+
+    @Schema(description = "수신자의 ID", example = "2")
     Long receiverId,
+
+    @Schema(description = "발신자의 ID", example = "3")
     Long senderId,
+
+    @Schema(description = "발신자의 이름", example = "홍길동")
     String senderName,
+
+    @Schema(description = "발신자의 프로필 이미지 URL", example = "https://example.com/image.jpg")
     String senderProfileImage,
-    String partyTitle) {
+
+    @Schema(description = "파티 제목", example = "생일 파티")
+    String partyTitle
+) {
 }
