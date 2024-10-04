@@ -22,7 +22,7 @@ spring:
             client-name: naver
             client-id: ${NAVER_CLIENT_ID}
             client-secret: ${NAVER_CLIENT_SECRET}
-            redirect-uri: https://port-0-unip-server-lxfol2lf38345220.sel5.cloudtype.app/login/oauth2/code/naver
+            redirect-uri: https://port-0-unip-server-fork-lxfol2lf38345220.sel5.cloudtype.app/login/oauth2/code/naver
             authorization-grant-type: authorization_code
             scope:
               - name
@@ -31,7 +31,7 @@ spring:
             client-name: google
             client-id: ${GOOGLE_CLIENT_ID}
             client-secret: ${GOOGLE_CLIENT_SECRET}
-            redirect-uri: http://localhost:8080/login/oauth2/code/google
+            redirect-uri: https://port-0-unip-server-fork-lxfol2lf38345220.sel5.cloudtype.app/login/oauth2/code/google
             authorization-grant-type: authorization_code
             scope:
               - profile
