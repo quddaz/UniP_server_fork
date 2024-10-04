@@ -1,4 +1,4 @@
-package unip.universityInParty.global.security;
+package unip.universityInParty.global.config;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -43,7 +43,7 @@ public class SecurityConfig {
                 .successHandler(customSuccessHandler)
             )
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/login/oauth2/code/**", "/refresh", "/api/**").permitAll()
+                .requestMatchers("/login/oauth2/code/**", "/refresh", "/api/**", "/v3/api-docs/**", "/swagger-ui/**").permitAll()
                 .anyRequest().authenticated())
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 

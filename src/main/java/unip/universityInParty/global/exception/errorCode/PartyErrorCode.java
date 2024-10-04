@@ -9,7 +9,7 @@ import unip.universityInParty.global.exception.errorCode.base.ErrorCode;
 @Getter
 public enum PartyErrorCode implements ErrorCode {
     UNAUTHORIZED_ACCESS(HttpStatus.BAD_REQUEST, "제거 권한이 없습니다."),
-    PARTY_NOT_FOUND(HttpStatus.BAD_REQUEST, "파티를 찾을 수 없습니다."),
+    PARTY_NOT_FOUND(HttpStatus.NOT_FOUND, "파티를 찾을 수 없습니다."),
     ALREADY_JOINED(HttpStatus.BAD_REQUEST, "이미 파티에 가입되어있습니다."),
     MEMBER_NOT_IN_PARTY(HttpStatus.BAD_REQUEST, "맴버가 해당 파티에 존재하지 않습니다."),
     PARTY_FULL(HttpStatus.BAD_REQUEST, "이미 파티가 꽉찼습니다."),

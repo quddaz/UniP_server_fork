@@ -1,6 +1,10 @@
 package unip.universityInParty.domain.refresh.controller;
 
 import io.jsonwebtoken.ExpiredJwtException;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -26,16 +30,20 @@ import java.util.Map;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
+@Tag(name = "Refresh", description = "토큰 재발급 API")
 public class RefreshController {
     private final JwtUtil jwtUtil;
     private final CookieStore cookieStore;
     private final RefreshService refreshService;
     private final MemberRepository memberRepository;
-    @GetMapping("/refresh")
-    public ResponseEntity<?> get(){
-        return ResponseEntity.ok().body(ResponseDto.of("조회 성공", refreshService.get()));
-    }
     @PostMapping("/refresh")
+    @Operation(summary = "토큰 재발급", description = "리프레시 토큰을 사용하여 새로운 액세스 토큰과 리프레시 토큰을 재발급합니다.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Refresh 재발급 성공"),
+        @ApiResponse(responseCode = "400", description = "잘못된 요청 데이터"),
+        @ApiResponse(responseCode = "401", description = "인증 실패"),
+        @ApiResponse(responseCode = "404", description = "사용자를 찾을 수 없음")
+    })
     public ResponseEntity<?> refresh(HttpServletRequest request, HttpServletResponse response) {
         log.info("리프레쉬 재발급");
         //쿠키에서 Refresh 토큰 얻기
