@@ -25,10 +25,10 @@ public class PMListService {
     private final MemberRepository memberRepository;
     private final PartyRepository partyRepository;
     @Transactional
-    public void createJoinParty(PartyRole partyRole, String username, Long partyId){
+    public void createJoinParty(PartyRole partyRole, Long memberId, Long partyId){
         Party party = partyRepository.findById(partyId)
             .orElseThrow(() -> new CustomException(PartyErrorCode.PARTY_NOT_FOUND));
-        Member member = memberRepository.findByUsername(username)
+        Member member = memberRepository.findById(memberId)
             .orElseThrow(() -> new CustomException(MemberErrorCode.MEMBER_NOT_FOUND));
         if (pmListRepository.existsByPartyAndMember(party, member)) {
             throw new CustomException(PartyErrorCode.ALREADY_JOINED);
@@ -43,10 +43,10 @@ public class PMListService {
     }
 
     @Transactional
-    public void deletePartyMember(String username, Long partyId){
+    public void deletePartyMember(Long memberId, Long partyId){
         Party party = partyRepository.findById(partyId)
             .orElseThrow(() -> new CustomException(PartyErrorCode.PARTY_NOT_FOUND));
-        Member member = memberRepository.findByUsername(username)
+        Member member = memberRepository.findById(memberId)
             .orElseThrow(() -> new CustomException(MemberErrorCode.MEMBER_NOT_FOUND));
 
         if (!pmListRepository.existsByPartyAndMember(party, member)) {
