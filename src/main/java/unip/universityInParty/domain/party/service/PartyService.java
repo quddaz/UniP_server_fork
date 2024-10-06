@@ -17,7 +17,6 @@ import unip.universityInParty.global.exception.errorCode.MemberErrorCode;
 import unip.universityInParty.global.exception.errorCode.PartyErrorCode;
 
 import java.util.List;
-
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -27,14 +26,13 @@ public class PartyService {
     private final MemberRepository memberRepository;
     private final CourseService courseService;
 
-
     public PartyDetailDto getPartyDetailById(Long id){
         return partyRepository.findPartyDetailById(id);
     }
 
     @Transactional
-    public Party create(PartyDto partyDto, String username, List<CourseDto> courseDtos){
-        Member member = memberRepository.findByUsername(username)
+    public Party create(PartyDto partyDto, Long memberId, List<CourseDto> courseDtos){
+        Member member = memberRepository.findById(memberId)
             .orElseThrow(() -> new CustomException(MemberErrorCode.MEMBER_NOT_FOUND));
         Party party = Party.builder()
             .title(partyDto.title())
@@ -52,11 +50,12 @@ public class PartyService {
 
         return savedParty;
     }
+
     @Transactional
-    public void delete(Long partyId, String username){
+    public void delete(Long partyId, Long memberId){
         Party party = partyRepository.findById(partyId)
             .orElseThrow(() -> new CustomException(PartyErrorCode.PARTY_NOT_FOUND));
-        Member member = memberRepository.findByUsername(username)
+        Member member = memberRepository.findById(memberId)
             .orElseThrow(() -> new CustomException(MemberErrorCode.MEMBER_NOT_FOUND));
 
         // 해당 파티가 현재 사용자에 의해 소유되고 있는지 확인
@@ -67,12 +66,14 @@ public class PartyService {
             throw new CustomException(PartyErrorCode.UNAUTHORIZED_ACCESS);
         }
     }
+
     @Transactional
-    public void update(Long partyId, PartyDto partyDto, String username, List<CourseDto> courseDtos) {
+    public void update(Long partyId, PartyDto partyDto, Long memberId, List<CourseDto> courseDtos) {
         Party party = partyRepository.findById(partyId)
             .orElseThrow(() -> new CustomException(PartyErrorCode.PARTY_NOT_FOUND));
-        Member member = memberRepository.findByUsername(username)
+        Member member = memberRepository.findById(memberId)
             .orElseThrow(() -> new CustomException(MemberErrorCode.MEMBER_NOT_FOUND));
+
         // 해당 파티가 현재 사용자에 의해 소유되고 있는지 확인
         if (party.getMember().equals(member)) {
             party.setTitle(partyDto.title());
@@ -87,5 +88,4 @@ public class PartyService {
             throw new CustomException(PartyErrorCode.UNAUTHORIZED_ACCESS);
         }
     }
-
 }

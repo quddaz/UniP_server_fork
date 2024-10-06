@@ -51,8 +51,8 @@ public class PartyController {
     })
     public ResponseEntity<?> createParty(@Valid @RequestBody PartyDto partyDto,
                                          @AuthenticationPrincipal CustomUserDetails customUserDetails) {
-        Party party = partyService.create(partyDto, customUserDetails.getUsername(), partyDto.courses());
-        pmListService.createJoinParty(PartyRole.MASTER, customUserDetails.getUsername(), party.getId());
+        Party party = partyService.create(partyDto, customUserDetails.getId(), partyDto.courses());
+        pmListService.createJoinParty(PartyRole.MASTER, customUserDetails.getId(), party.getId());
         return ResponseEntity.ok().body(ResponseDto.of("파티 생성 성공", party.getId()));
     }
 
@@ -66,7 +66,7 @@ public class PartyController {
     })
     public ResponseEntity<?> deleteParty(@PathVariable Long id,
                                          @AuthenticationPrincipal CustomUserDetails customUserDetails) {
-        partyService.delete(id, customUserDetails.getUsername());
+        partyService.delete(id, customUserDetails.getId());
         return ResponseEntity.ok().body(ResponseDto.of("파티 제거 성공", null));
     }
 
@@ -81,7 +81,7 @@ public class PartyController {
     public ResponseEntity<?> updateParty(@PathVariable Long id,
                                          @Valid @RequestBody PartyDto partyDto,
                                          @AuthenticationPrincipal CustomUserDetails customUserDetails) {
-        partyService.update(id, partyDto, customUserDetails.getUsername(), partyDto.courses());
+        partyService.update(id, partyDto, customUserDetails.getId(), partyDto.courses());
         return ResponseEntity.ok().body(ResponseDto.of("파티 업데이트 성공", null));
     }
 }
