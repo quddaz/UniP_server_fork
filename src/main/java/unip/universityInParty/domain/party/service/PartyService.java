@@ -40,7 +40,7 @@ public class PartyService {
             .title(partyDto.title())
             .content(partyDto.content())
             .partyLimit(partyDto.limit())
-            .peopleCount(1)
+            .peopleCount(0)
             .startTime(partyDto.startTime())
             .endTime(partyDto.endTime())
             .member(member)
