@@ -1,7 +1,6 @@
 package unip.universityInParty.global.security.custom;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import unip.universityInParty.domain.member.dto.MemberDTO;
 import unip.universityInParty.domain.member.entity.Member;

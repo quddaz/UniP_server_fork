@@ -5,15 +5,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import unip.universityInParty.domain.member.entity.Enum.Status;
-import unip.universityInParty.domain.party.repository.PartyRepository;
-
-import javax.naming.ldap.PagedResultsControl;
-
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+
 
 @Getter
 @AllArgsConstructor

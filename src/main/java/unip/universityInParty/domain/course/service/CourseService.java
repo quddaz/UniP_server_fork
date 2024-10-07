@@ -1,6 +1,5 @@
 package unip.universityInParty.domain.course.service;
 
-import jakarta.persistence.criteria.Root;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

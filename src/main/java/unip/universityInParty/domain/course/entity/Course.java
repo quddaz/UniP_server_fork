@@ -2,7 +2,6 @@ package unip.universityInParty.domain.course.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import unip.universityInParty.domain.member.entity.Member;
 import unip.universityInParty.domain.party.entity.Party;
 
 @Getter

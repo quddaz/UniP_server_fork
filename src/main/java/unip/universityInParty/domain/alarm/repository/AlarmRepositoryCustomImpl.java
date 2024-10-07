@@ -4,7 +4,6 @@ import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import unip.universityInParty.domain.alarm.dto.response.AlarmResponseDTO;
 import unip.universityInParty.domain.alarm.entity.QAlarm;
 import unip.universityInParty.domain.alarmDetail.entity.QAlarmDetail;
@@ -12,6 +11,7 @@ import unip.universityInParty.domain.member.entity.QMember;
 import unip.universityInParty.domain.party.entity.QParty;
 
 import java.util.List;
+
 @RequiredArgsConstructor
 public class AlarmRepositoryCustomImpl implements AlarmRepositoryCustom{
 

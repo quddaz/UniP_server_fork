@@ -3,8 +3,7 @@ package unip.universityInParty.domain.alarmDetail.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import unip.universityInParty.domain.alarm.entity.Alarm;
-import unip.universityInParty.domain.member.entity.Member;
-import unip.universityInParty.domain.party.entity.Party;
+
 
 @Getter
 @Setter

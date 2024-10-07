@@ -13,7 +13,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import unip.universityInParty.global.baseResponse.ResponseDto;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
 
 @Component
 public class JwtExceptionFilter extends OncePerRequestFilter {
