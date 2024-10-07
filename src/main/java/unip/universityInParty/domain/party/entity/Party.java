@@ -7,7 +7,6 @@ import unip.universityInParty.global.exception.custom.CustomException;
 
 
 import java.time.LocalDateTime;
-import java.util.Date;
 import unip.universityInParty.global.exception.errorCode.PartyErrorCode;
 @Getter
 @Setter

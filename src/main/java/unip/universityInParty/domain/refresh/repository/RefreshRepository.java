@@ -1,7 +1,6 @@
 package unip.universityInParty.domain.refresh.repository;
 
 import org.springframework.data.keyvalue.repository.KeyValueRepository;
-import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 import unip.universityInParty.domain.refresh.entity.Refresh;
 

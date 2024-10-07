@@ -11,8 +11,6 @@ import unip.universityInParty.domain.member.entity.Enum.Role;
 import unip.universityInParty.domain.member.entity.Enum.Status;
 import unip.universityInParty.domain.member.entity.Member;
 import unip.universityInParty.domain.member.repository.MemberRepository;
-import unip.universityInParty.global.exception.custom.CustomException;
-import unip.universityInParty.global.exception.errorCode.MemberErrorCode;
 import unip.universityInParty.global.oauth2.dto.GoogleResponse;
 import unip.universityInParty.global.oauth2.dto.NaverResponse;
 import unip.universityInParty.global.oauth2.dto.OAuth2Response;

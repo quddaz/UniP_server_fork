@@ -36,7 +36,7 @@ public class ExceptionManager {
         });
 
         ResponseDto<Map<String, String>> response = ResponseDto.fail(
-            422,
+            400,
             "유효성 검사에 실패했습니다.",
             errors
         );

@@ -4,26 +4,17 @@ import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import unip.universityInParty.domain.universityVerification.entity.UniversityVerification;
 import unip.universityInParty.domain.universityVerification.repository.UniversityVerificationRepository;
 import unip.universityInParty.domain.member.entity.Member;
 import unip.universityInParty.domain.member.repository.MemberRepository;
-import unip.universityInParty.global.config.RedisConfig;
 import unip.universityInParty.global.exception.custom.CustomException;
 import unip.universityInParty.global.exception.errorCode.MailErrorCode;
 import unip.universityInParty.global.exception.errorCode.MemberErrorCode;
-
-import java.security.SecureRandom;
-import java.util.Objects;
 import java.util.Random;
-import java.util.concurrent.TimeUnit;
 @Service
 @RequiredArgsConstructor
 @Slf4j

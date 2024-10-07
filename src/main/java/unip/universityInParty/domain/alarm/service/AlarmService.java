@@ -10,7 +10,6 @@ import unip.universityInParty.domain.alarm.repository.AlarmRepository;
 import unip.universityInParty.domain.alarmDetail.entity.AlarmDetail;
 import unip.universityInParty.domain.alarmDetail.repository.AlarmDetailRepository;
 import unip.universityInParty.domain.friend.service.FriendService;
-import unip.universityInParty.domain.party.service.PartyService;
 import unip.universityInParty.domain.pmList.entity.Enum.PartyRole;
 import unip.universityInParty.domain.pmList.service.PMListService;
 import unip.universityInParty.global.exception.custom.CustomException;

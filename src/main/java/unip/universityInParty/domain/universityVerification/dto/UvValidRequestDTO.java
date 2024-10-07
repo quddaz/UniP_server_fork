@@ -2,10 +2,7 @@ package unip.universityInParty.domain.universityVerification.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotEmpty;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Builder
 @Schema(description = "이메일 인증 코드 유효성 검사를 위한 DTO")
