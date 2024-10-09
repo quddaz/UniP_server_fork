@@ -3,6 +3,7 @@ package unip.universityInParty.domain.alarmDetail.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import unip.universityInParty.domain.alarm.entity.Alarm;
+import unip.universityInParty.domain.party.entity.Party;
 
 
 @Getter
@@ -20,6 +21,7 @@ public class AlarmDetail {
     @JoinColumn(name = "alarm_id")
     private Alarm alarm;
 
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "party_id")
-    private Long party;
+    private Party party;
 }

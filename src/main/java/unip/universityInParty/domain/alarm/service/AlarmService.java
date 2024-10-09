@@ -10,6 +10,8 @@ import unip.universityInParty.domain.alarm.repository.AlarmRepository;
 import unip.universityInParty.domain.alarmDetail.entity.AlarmDetail;
 import unip.universityInParty.domain.alarmDetail.repository.AlarmDetailRepository;
 import unip.universityInParty.domain.friend.service.FriendService;
+import unip.universityInParty.domain.party.entity.Party;
+import unip.universityInParty.domain.party.service.PartyService;
 import unip.universityInParty.domain.pmList.entity.Enum.PartyRole;
 import unip.universityInParty.domain.pmList.service.PMListService;
 import unip.universityInParty.global.exception.custom.CustomException;
@@ -25,6 +27,7 @@ public class AlarmService {
     private final AlarmDetailRepository alarmDetailRepository;
     private final FriendService friendService;
     private final PMListService pmListService;
+    private final PartyService partyService;
     private void validateUniqueAlarm(Long receiverId, Long senderId, AlarmCategory category) {
         if (alarmRepository.existsByReceiverAndSenderAndAlarmCategory(receiverId, senderId, category)) {
             throw new CustomException(AlarmErrorCode.ALREADY_EXISTS);
@@ -46,6 +49,7 @@ public class AlarmService {
     @Transactional
     public void sendInvitationAlarm(Long receiverId, Long senderId, Long partyId) {
         validateUniqueAlarm(receiverId, senderId, AlarmCategory.INVITATION);
+        Party party = partyService.getPartyById(partyId);
 
         Alarm alarm = Alarm.builder()
             .receiver(receiverId)
@@ -56,7 +60,7 @@ public class AlarmService {
 
         AlarmDetail alarmDetail = AlarmDetail.builder()
             .alarm(alarm)
-            .party(partyId)
+            .party(party)
             .build();
         alarmDetailRepository.save(alarmDetail);
     }
@@ -90,7 +94,7 @@ public class AlarmService {
         AlarmDetail alarmDetail = alarmDetailRepository.findByAlarm(alarm)
             .orElseThrow(() -> new CustomException(AlarmErrorCode.ALARM_DETAIL_NOT_FOUND));
 
-        pmListService.createJoinParty(PartyRole.USER, alarm.getReceiver(), alarmDetail.getParty());
+        pmListService.createJoinParty(PartyRole.USER, alarm.getReceiver(), alarmDetail.getParty().getId());
         deleteAlarmAndDetail(alarm);
     }
     @Transactional
