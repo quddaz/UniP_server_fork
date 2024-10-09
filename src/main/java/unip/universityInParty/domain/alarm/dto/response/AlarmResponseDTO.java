@@ -10,11 +10,11 @@ public record AlarmResponseDTO(
     long id,
 
     @Schema(description = "수신자의 ID", example = "2")
-    Long receiverId,
-
+    Long receiver,
+    @Schema(description = "알람 카테고리", example = "INVITATION,FRIEND_REQUEST")
+    String category,
     @Schema(description = "발신자의 ID", example = "3")
-    Long senderId,
-
+    Long sender,
     @Schema(description = "발신자의 이름", example = "홍길동")
     String senderName,
 

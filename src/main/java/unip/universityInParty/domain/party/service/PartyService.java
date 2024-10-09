@@ -29,7 +29,10 @@ public class PartyService {
     public PartyDetailDto getPartyDetailById(Long id){
         return partyRepository.findPartyDetailById(id);
     }
-
+    public Party getPartyById(Long id){
+        return partyRepository.findById(id)
+        .orElseThrow(() -> new CustomException(PartyErrorCode.PARTY_NOT_FOUND));
+    }
     @Transactional
     public Party create(PartyDto partyDto, Long memberId, List<CourseDto> courseDtos){
         Member member = memberRepository.findById(memberId)
