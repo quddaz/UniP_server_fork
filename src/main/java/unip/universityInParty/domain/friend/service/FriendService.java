@@ -64,7 +64,7 @@ public class FriendService {
         return friendRepository.getMyFriend(id);
     }
 
-
+    public List<FriendDTO> getBoredFriend(Long id) { return  friendRepository.getBoredFriend(id);}
 
 
 }

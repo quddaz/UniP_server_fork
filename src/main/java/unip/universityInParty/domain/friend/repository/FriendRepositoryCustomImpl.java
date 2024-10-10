@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import unip.universityInParty.domain.friend.dto.FriendDTO;
 import unip.universityInParty.domain.friend.entity.QFriend;
+import unip.universityInParty.domain.member.entity.Enum.Status;
 import unip.universityInParty.domain.member.entity.QMember;
 
 import java.util.List;
@@ -31,8 +32,28 @@ public class FriendRepositoryCustomImpl implements FriendRepositoryCustom {
                 member.profile_image,
                 member.status))
             .from(friend)
-            .join(friend.fromMember, member)
+            .join(friend.toMember, member)
             .where(friend.fromMember.id.eq(id))
+            .fetch();
+    }
+
+    @Override
+    public List<FriendDTO> getBoredFriend(Long id) {
+        JPAQueryFactory queryFactory = new JPAQueryFactory(em);
+        QMember member = QMember.member;
+        QFriend friend = QFriend.friend;
+
+        return queryFactory
+            .select(Projections.constructor(FriendDTO.class,
+                member.id,
+                member.name,
+                member.profile_image,
+                member.status))
+            .from(friend)
+            .join(friend.fromMember, member)
+            .where(friend.fromMember.id.eq(id)
+                .and(member.status.eq(Status.BORED)))
+            .limit(5)  // 최대 5개만 가져오기
             .fetch();
     }
 }

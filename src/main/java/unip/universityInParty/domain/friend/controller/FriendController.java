@@ -64,4 +64,16 @@ public class FriendController {
         List<FriendDTO> friends = friendService.getMyFriend(customUserDetails.getId());
         return ResponseEntity.ok().body(ResponseDto.of("친구 조회 성공", friends));
     }
+    @GetMapping
+    @Operation(summary = "메인 페이지 친구 조회", description = "한가한 친구 최대 5명 조회")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "친구 조회 성공",
+            content = @Content(mediaType = "application/json",
+                schema = @Schema(type = "array", implementation = FriendDTO.class))),
+        @ApiResponse(responseCode = "401", description = "인증 실패: 요청을 수행할 권한이 없습니다.")
+    })
+    public ResponseEntity<?> getBoredFriend(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        List<FriendDTO> friends = friendService.getBoredFriend(customUserDetails.getId());
+        return ResponseEntity.ok().body(ResponseDto.of("친구 조회 성공", friends));
+    }
 }

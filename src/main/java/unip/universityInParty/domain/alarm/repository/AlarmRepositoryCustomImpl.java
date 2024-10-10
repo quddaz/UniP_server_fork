@@ -3,6 +3,7 @@ package unip.universityInParty.domain.alarm.repository;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 import unip.universityInParty.domain.alarm.dto.response.AlarmResponseDTO;
 import unip.universityInParty.domain.alarm.entity.QAlarm;
@@ -14,7 +15,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 public class AlarmRepositoryCustomImpl implements AlarmRepositoryCustom{
-
+    @PersistenceContext
     private EntityManager em;
 
     @Override

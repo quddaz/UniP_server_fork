@@ -12,6 +12,7 @@ import unip.universityInParty.domain.party.dto.request.PartyDto;
 import unip.universityInParty.domain.party.dto.response.PartyDetailDto;
 import unip.universityInParty.domain.party.entity.Party;
 import unip.universityInParty.domain.party.repository.PartyRepository;
+import unip.universityInParty.domain.pmList.service.PMListService;
 import unip.universityInParty.global.exception.custom.CustomException;
 import unip.universityInParty.global.exception.errorCode.MemberErrorCode;
 import unip.universityInParty.global.exception.errorCode.PartyErrorCode;
@@ -25,7 +26,7 @@ public class PartyService {
     private final PartyRepository partyRepository;
     private final MemberRepository memberRepository;
     private final CourseService courseService;
-
+    private final PMListService pmListService;
     public PartyDetailDto getPartyDetailById(Long id){
         return partyRepository.findPartyDetailById(id);
     }
@@ -63,8 +64,9 @@ public class PartyService {
 
         // 해당 파티가 현재 사용자에 의해 소유되고 있는지 확인
         if (party.getMember().equals(member)) {
-            partyRepository.deleteById(partyId);
+            pmListService.deleteByParty(party);
             courseService.delete(partyId);
+            partyRepository.deleteById(partyId);
         } else {
             throw new CustomException(PartyErrorCode.UNAUTHORIZED_ACCESS);
         }
