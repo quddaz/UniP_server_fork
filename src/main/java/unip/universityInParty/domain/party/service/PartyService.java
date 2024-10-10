@@ -10,6 +10,7 @@ import unip.universityInParty.domain.member.entity.Member;
 import unip.universityInParty.domain.member.repository.MemberRepository;
 import unip.universityInParty.domain.party.dto.request.PartyDto;
 import unip.universityInParty.domain.party.dto.response.PartyDetailDto;
+import unip.universityInParty.domain.party.dto.response.PartyResponseDto;
 import unip.universityInParty.domain.party.entity.Party;
 import unip.universityInParty.domain.party.repository.PartyRepository;
 import unip.universityInParty.domain.pmList.service.PMListService;
@@ -27,13 +28,25 @@ public class PartyService {
     private final MemberRepository memberRepository;
     private final CourseService courseService;
     private final PMListService pmListService;
+
+    // 주어진 파티 ID에 대한 세부 정보를 조회합니다.
     public PartyDetailDto getPartyDetailById(Long id){
-        return partyRepository.findPartyDetailById(id);
+        return partyRepository.findPartyDetailById(id)
+            .orElseThrow(() -> new CustomException(PartyErrorCode.PARTY_NOT_FOUND));
     }
+
+    // 주어진 파티 ID에 대한 파티 정보를 조회합니다.
     public Party getPartyById(Long id){
         return partyRepository.findById(id)
-        .orElseThrow(() -> new CustomException(PartyErrorCode.PARTY_NOT_FOUND));
+            .orElseThrow(() -> new CustomException(PartyErrorCode.PARTY_NOT_FOUND));
     }
+
+    // 메인 페이지에 표시할 파티 리스트를 조회합니다.
+    public List<PartyResponseDto> getPartyMainPage(){
+        return partyRepository.getMainPartyPage();
+    }
+
+    // 새로운 파티를 생성하고, 관련된 코스를 저장합니다.
     @Transactional
     public Party create(PartyDto partyDto, Long memberId, List<CourseDto> courseDtos){
         Member member = memberRepository.findById(memberId)
@@ -55,6 +68,7 @@ public class PartyService {
         return savedParty;
     }
 
+    // 파티를 삭제하고, 관련된 멤버 및 코스를 함께 삭제합니다.
     @Transactional
     public void delete(Long partyId, Long memberId){
         Party party = partyRepository.findById(partyId)
@@ -64,14 +78,15 @@ public class PartyService {
 
         // 해당 파티가 현재 사용자에 의해 소유되고 있는지 확인
         if (party.getMember().equals(member)) {
-            pmListService.deleteByParty(party);
-            courseService.delete(partyId);
-            partyRepository.deleteById(partyId);
+            pmListService.deleteByParty(party); // 파티와 관련된 멤버 삭제
+            courseService.delete(partyId); // 파티와 관련된 코스 삭제
+            partyRepository.deleteById(partyId); // 파티 삭제
         } else {
             throw new CustomException(PartyErrorCode.UNAUTHORIZED_ACCESS);
         }
     }
 
+    // 파티 정보를 업데이트하고, 관련된 코스를 업데이트합니다.
     @Transactional
     public void update(Long partyId, PartyDto partyDto, Long memberId, List<CourseDto> courseDtos) {
         Party party = partyRepository.findById(partyId)
@@ -86,7 +101,7 @@ public class PartyService {
             party.setPartyLimit(partyDto.limit());
             party.setStartTime(partyDto.startTime());
             party.setEndTime(partyDto.endTime());
-            partyRepository.save(party);
+            partyRepository.save(party); // 파티 업데이트
             // Courses 업데이트
             courseService.update(courseDtos, party);
         } else {

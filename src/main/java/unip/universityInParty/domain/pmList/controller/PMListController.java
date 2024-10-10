@@ -49,4 +49,15 @@ public class PMListController {
         pmListService.deletePartyMember(customUserDetails.getId(), id);
         return ResponseEntity.ok().body(ResponseDto.of("파티 탈퇴 성공", id));
     }
+    @GetMapping("/{id}")
+    @Operation(summary = "파티 가입자 조회", description = "주어진 ID의 파티 가입자를 조회합니다.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "파티 가입자 조회 성공"),
+        @ApiResponse(responseCode = "400", description = "잘못된 요청 데이터"),
+        @ApiResponse(responseCode = "401", description = "인증 실패"),
+        @ApiResponse(responseCode = "404", description = "파티를 찾을 수 없음")
+    })
+    public ResponseEntity<?> getPMList(@PathVariable Long id) {
+        return ResponseEntity.ok().body(ResponseDto.of("파티 가입자 조회 성공", pmListService.getMemberIdsByPartyId(id)));
+    }
 }

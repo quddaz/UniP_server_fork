@@ -23,11 +23,11 @@ public class FriendService {
 
     private final MemberRepository memberRepository;
     private final FriendRepository friendRepository;
-    /**
-     * 친구 요청 수락
-     */
+
+    // 친구 요청 수락
     @Transactional
     public void acceptRequest(Long fromMemberId, Long toMemberId) {
+        // 친구 요청을 수락하여 친구 관계를 생성
         Member fromMember = memberRepository.findById(fromMemberId)
             .orElseThrow(() -> new CustomException(MemberErrorCode.MEMBER_NOT_FOUND));
         Member toMember = memberRepository.findById(toMemberId)
@@ -38,6 +38,7 @@ public class FriendService {
             throw new CustomException(FriendErrorCode.ALREADY_FRIENDS);
         }
 
+        // 친구 관계를 생성
         Friend fromFriend = Friend.builder()
             .fromMember(fromMember)
             .toMember(toMember)
@@ -52,19 +53,20 @@ public class FriendService {
         friendRepository.save(toFriend);
     }
 
-    /**
-     * 친구 요청 삭제
-     */
+    // 친구 요청 삭제
     @Transactional
     public void deleteRequest(Long fromMemberId, Long toMemberId) {
+        // 친구 요청을 삭제
         friendRepository.deleteByFromMemberIdAndToMemberId(fromMemberId, toMemberId);
     }
 
-    public List<FriendDTO> getMyFriend(Long id){
+    // 내 친구 목록 조회
+    public List<FriendDTO> getMyFriend(Long id) {
         return friendRepository.getMyFriend(id);
     }
 
-    public List<FriendDTO> getBoredFriend(Long id) { return  friendRepository.getBoredFriend(id);}
-
-
+    // 소외된 친구 목록 조회
+    public List<FriendDTO> getBoredFriend(Long id) {
+        return friendRepository.getBoredFriend(id);
+    }
 }

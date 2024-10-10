@@ -84,4 +84,15 @@ public class PartyController {
         partyService.update(id, partyDto, customUserDetails.getId(), partyDto.courses());
         return ResponseEntity.ok().body(ResponseDto.of("파티 업데이트 성공", null));
     }
+    @GetMapping
+    @Operation(summary = "파티 전체 조회", description = "파티 전체 정보를 조회합니다.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "파티 조회 성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = PartyDetailDto.class))),
+        @ApiResponse(responseCode = "400", description = "잘못된 요청 데이터")
+    })
+    public ResponseEntity<?> getParty() {
+        return ResponseEntity.ok().body(ResponseDto.of("파티 상세 조회 성공", partyService.getPartyMainPage()));
+    }
+
 }
+
