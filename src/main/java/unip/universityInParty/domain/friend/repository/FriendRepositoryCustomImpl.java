@@ -32,7 +32,7 @@ public class FriendRepositoryCustomImpl implements FriendRepositoryCustom {
                 member.profile_image,
                 member.status))
             .from(friend)
-            .join(friend.fromMember, member)
+            .join(friend.toMember, member)
             .where(friend.fromMember.id.eq(id))
             .fetch();
     }

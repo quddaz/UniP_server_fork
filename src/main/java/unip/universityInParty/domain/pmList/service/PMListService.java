@@ -54,4 +54,9 @@ public class PMListService {
         party.leaveParty();
         pmListRepository.deleteByPartyAndMember(party, member);
     }
+
+    @Transactional
+    public void deleteByParty(Party party){
+        pmListRepository.deleteByParty(party);
+    }
 }

@@ -12,4 +12,6 @@ public interface PMListRepository extends JpaRepository<PMList, Long> {
     void deleteByPartyAndMember(Party party, Member member);
 
     boolean existsByPartyAndMember(Party party, Member member);
+
+    void deleteByParty(Party party);
 }
