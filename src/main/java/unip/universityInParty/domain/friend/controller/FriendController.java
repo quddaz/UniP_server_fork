@@ -64,7 +64,7 @@ public class FriendController {
         List<FriendDTO> friends = friendService.getMyFriend(customUserDetails.getId());
         return ResponseEntity.ok().body(ResponseDto.of("친구 조회 성공", friends));
     }
-    @GetMapping
+    @GetMapping("/bored")
     @Operation(summary = "메인 페이지 친구 조회", description = "한가한 친구 최대 5명 조회")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "친구 조회 성공",
