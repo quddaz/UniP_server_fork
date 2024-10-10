@@ -15,6 +15,7 @@ import unip.universityInParty.global.exception.custom.CustomException;
 import unip.universityInParty.global.exception.errorCode.MemberErrorCode;
 import unip.universityInParty.global.exception.errorCode.PartyErrorCode;
 
+import java.util.List;
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -23,6 +24,18 @@ public class PMListService {
     private final PMListRepository pmListRepository;
     private final MemberRepository memberRepository;
     private final PartyRepository partyRepository;
+
+    // 주어진 파티 ID에 속한 멤버 ID 리스트를 조회합니다.
+    public List<Long> getMemberIdsByPartyId(Long partyId) {
+        if (!partyRepository.existsById(partyId)) {
+            throw new CustomException(PartyErrorCode.PARTY_NOT_FOUND);
+        }
+
+        // 파티가 존재할 경우 멤버 ID 리스트 조회
+        return pmListRepository.findMemberIdsByPartyId(partyId);
+    }
+
+    // 파티에 멤버를 추가하고, 멤버의 역할을 설정합니다.
     @Transactional
     public void createJoinParty(PartyRole partyRole, Long memberId, Long partyId){
         Party party = partyRepository.findById(partyId)
@@ -32,15 +45,16 @@ public class PMListService {
         if (pmListRepository.existsByPartyAndMember(party, member)) {
             throw new CustomException(PartyErrorCode.ALREADY_JOINED);
         }
-        party.joinParty();
+        party.joinParty(); // 파티 인원 수 증가
         PMList pmList = PMList.builder()
             .party(party)
             .member(member)
             .role(partyRole)
             .build();
-        pmListRepository.save(pmList);
+        pmListRepository.save(pmList); // 파티 멤버 리스트에 저장
     }
 
+    // 특정 멤버를 파티에서 삭제합니다.
     @Transactional
     public void deletePartyMember(Long memberId, Long partyId){
         Party party = partyRepository.findById(partyId)
@@ -51,12 +65,13 @@ public class PMListService {
         if (!pmListRepository.existsByPartyAndMember(party, member)) {
             throw new CustomException(PartyErrorCode.MEMBER_NOT_IN_PARTY);
         }
-        party.leaveParty();
-        pmListRepository.deleteByPartyAndMember(party, member);
+        party.leaveParty(); // 파티 인원 수 감소
+        pmListRepository.deleteByPartyAndMember(party, member); // 멤버 삭제
     }
 
+    // 주어진 파티에 속한 모든 멤버를 삭제합니다.
     @Transactional
     public void deleteByParty(Party party){
-        pmListRepository.deleteByParty(party);
+        pmListRepository.deleteByParty(party); // 파티와 관련된 모든 멤버 삭제
     }
 }

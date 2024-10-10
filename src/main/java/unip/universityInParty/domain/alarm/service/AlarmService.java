@@ -28,14 +28,17 @@ public class AlarmService {
     private final FriendService friendService;
     private final PMListService pmListService;
     private final PartyService partyService;
+
+    // 알림의 중복 여부를 확인
     private void validateUniqueAlarm(Long receiverId, Long senderId, AlarmCategory category) {
         if (alarmRepository.existsByReceiverAndSenderAndAlarmCategory(receiverId, senderId, category)) {
             throw new CustomException(AlarmErrorCode.ALREADY_EXISTS);
         }
     }
-
+    // 친구 추가 알림 생성
     @Transactional
     public void sendFriendRequestAlarm(Long receiverId, Long senderId) {
+        // 친구 요청 알림 전송
         validateUniqueAlarm(receiverId, senderId, AlarmCategory.FRIEND_REQUEST);
 
         Alarm alarm = Alarm.builder()
@@ -45,9 +48,10 @@ public class AlarmService {
             .build();
         alarmRepository.save(alarm);
     }
-
+    // 초대 알림 생성
     @Transactional
     public void sendInvitationAlarm(Long receiverId, Long senderId, Long partyId) {
+        // 초대 알림 전송
         validateUniqueAlarm(receiverId, senderId, AlarmCategory.INVITATION);
         Party party = partyService.getPartyById(partyId);
 
@@ -65,11 +69,14 @@ public class AlarmService {
         alarmDetailRepository.save(alarmDetail);
     }
 
+    // 내 알림 목록 조회
     public List<AlarmResponseDTO> retrieveMyAlarms(Long receiverId) {
         return alarmRepository.findAlarmsByReceiverId(receiverId);
     }
+    // 알람 요청 처리
     @Transactional
     public void processAlarmRequest(Long alarmId) {
+        // 알림 요청 처리
         Alarm alarm = alarmRepository.findById(alarmId)
             .orElseThrow(() -> new CustomException(AlarmErrorCode.ALARM_NOT_FOUND));
         if (alarm.getAlarmCategory().equals(AlarmCategory.FRIEND_REQUEST)) {
@@ -79,26 +86,23 @@ public class AlarmService {
             handleInvitationAlarm(alarm);
         }
     }
+    public void acceptFriendRequest(Alarm alarm) {
+        // 친구 요청 수락
+        friendService.acceptRequest(alarm.getSender(), alarm.getReceiver());
+        deleteAlarmAndDetail(alarm);
+    }
 
+    // 알림과 알림 세부정보 삭제
     private void deleteAlarmAndDetail(Alarm alarm) {
         alarmDetailRepository.deleteByAlarm(alarm);
         alarmRepository.delete(alarm);
     }
 
-    public void acceptFriendRequest(Alarm alarm) {
-        friendService.acceptRequest(alarm.getSender(), alarm.getReceiver());
-        deleteAlarmAndDetail(alarm);
-    }
 
-    public void handleInvitationAlarm(Alarm alarm) {
-        AlarmDetail alarmDetail = alarmDetailRepository.findByAlarm(alarm)
-            .orElseThrow(() -> new CustomException(AlarmErrorCode.ALARM_DETAIL_NOT_FOUND));
-
-        pmListService.createJoinParty(PartyRole.USER, alarm.getReceiver(), alarmDetail.getParty().getId());
-        deleteAlarmAndDetail(alarm);
-    }
+    // 알람 거절
     @Transactional
     public void processNoAlarmRequest(Long alarmId) {
+        // 알림 요청이 없을 경우 처리
         Alarm alarm = alarmRepository.findById(alarmId)
             .orElseThrow(() -> new CustomException(AlarmErrorCode.ALARM_NOT_FOUND));
 
@@ -108,5 +112,12 @@ public class AlarmService {
             alarmRepository.delete(alarm);
         }
     }
-}
+    public void handleInvitationAlarm(Alarm alarm) {
+        // 초대 알림 처리
+        AlarmDetail alarmDetail = alarmDetailRepository.findByAlarm(alarm)
+            .orElseThrow(() -> new CustomException(AlarmErrorCode.ALARM_DETAIL_NOT_FOUND));
 
+        pmListService.createJoinParty(PartyRole.USER, alarm.getReceiver(), alarmDetail.getParty().getId());
+        deleteAlarmAndDetail(alarm);
+    }
+}
