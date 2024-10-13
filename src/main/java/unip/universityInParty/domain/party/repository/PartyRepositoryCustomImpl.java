@@ -41,7 +41,10 @@ public class PartyRepositoryCustomImpl implements PartyRepositoryCustom {
                 ))
             .from(party)
             .join(party.member, member)
-            .where(party.endTime.goe(LocalDateTime.now())) // 예시: 현재 시간 이후의 파티만 조회
+            .where(
+                party.endTime.goe(LocalDateTime.now()) // 현재 시간 이후의 파티만 조회
+                    .and(party.isClosed.eq(false)) // isClosed가 false인 파티만 조회
+            )
             .fetch();
     }
 
