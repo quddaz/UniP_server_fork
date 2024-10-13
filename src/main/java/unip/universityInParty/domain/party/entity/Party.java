@@ -27,9 +27,9 @@ public class Party {
 
     private int peopleCount;
 
-    private LocalDateTime startTime; // LocalDateTime 사용
+    private LocalDateTime startTime;
 
-    private LocalDateTime endTime; // 변수명 소문자로 수정
+    private LocalDateTime endTime;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
@@ -37,6 +37,8 @@ public class Party {
 
     @Version  // 낙관적 락을 위한 버전 필드 추가
     private int version;
+
+    private boolean isClosed;
 
     public boolean isPartyFull() {
         return peopleCount >= partyLimit;

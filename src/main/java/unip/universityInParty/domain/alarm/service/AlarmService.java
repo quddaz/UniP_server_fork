@@ -16,6 +16,7 @@ import unip.universityInParty.domain.pmList.entity.Enum.PartyRole;
 import unip.universityInParty.domain.pmList.service.PMListService;
 import unip.universityInParty.global.exception.custom.CustomException;
 import unip.universityInParty.global.exception.errorCode.AlarmErrorCode;
+import unip.universityInParty.global.exception.errorCode.PartyErrorCode;
 
 import java.util.List;
 
@@ -54,6 +55,10 @@ public class AlarmService {
         // 초대 알림 전송
         validateUniqueAlarm(receiverId, senderId, AlarmCategory.INVITATION);
         Party party = partyService.getPartyById(partyId);
+
+        if(party.isClosed()){
+            throw new CustomException(PartyErrorCode.PARTY_CLOSED);
+        }
 
         Alarm alarm = Alarm.builder()
             .receiver(receiverId)

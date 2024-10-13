@@ -27,7 +27,6 @@ public class PartyService {
     private final PartyRepository partyRepository;
     private final MemberRepository memberRepository;
     private final CourseService courseService;
-    private final PMListService pmListService;
 
     // 주어진 파티 ID에 대한 세부 정보를 조회합니다.
     public PartyDetailDto getPartyDetailById(Long id){
@@ -59,6 +58,7 @@ public class PartyService {
             .startTime(partyDto.startTime())
             .endTime(partyDto.endTime())
             .member(member)
+            .isClosed(false)
             .build();
         Party savedParty = partyRepository.save(party);
 
@@ -78,9 +78,9 @@ public class PartyService {
 
         // 해당 파티가 현재 사용자에 의해 소유되고 있는지 확인
         if (party.getMember().equals(member)) {
-            pmListService.deleteByParty(party); // 파티와 관련된 멤버 삭제
-            courseService.delete(partyId); // 파티와 관련된 코스 삭제
-            partyRepository.deleteById(partyId); // 파티 삭제
+            courseService.delete(partyId);
+            party.setClosed(true);
+            partyRepository.save(party);
         } else {
             throw new CustomException(PartyErrorCode.UNAUTHORIZED_ACCESS);
         }
@@ -95,7 +95,7 @@ public class PartyService {
             .orElseThrow(() -> new CustomException(MemberErrorCode.MEMBER_NOT_FOUND));
 
         // 해당 파티가 현재 사용자에 의해 소유되고 있는지 확인
-        if (party.getMember().equals(member)) {
+        if (party.getMember().equals(member) && !party.isClosed()) {
             party.setTitle(partyDto.title());
             party.setContent(partyDto.content());
             party.setPartyLimit(partyDto.limit());
