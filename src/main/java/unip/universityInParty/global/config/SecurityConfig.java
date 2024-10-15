@@ -3,6 +3,7 @@ package unip.universityInParty.global.config;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -18,6 +19,7 @@ import unip.universityInParty.global.security.jwt.JwtExceptionFilter;
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
+@EnableAspectJAutoProxy
 public class SecurityConfig {
 
     private final CustomSuccessHandler customSuccessHandler; // 인증 성공 시 처리할 커스텀 핸들러
