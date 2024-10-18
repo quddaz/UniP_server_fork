@@ -2,11 +2,14 @@ package unip.universityInParty.domain.party.repository;
 
 import com.querydsl.core.FetchableQuery;
 import com.querydsl.core.types.Projections;
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
+import unip.universityInParty.domain.course.dto.CourseDto;
+import unip.universityInParty.domain.course.entity.QCourse;
 import unip.universityInParty.domain.friend.dto.FriendDTO;
 import unip.universityInParty.domain.friend.entity.QFriend;
 import unip.universityInParty.domain.member.entity.QMember;
@@ -51,6 +54,7 @@ public class PartyRepositoryCustomImpl implements PartyRepositoryCustom {
     @Override
     public Optional<PartyDetailDto> findPartyDetailById(Long id) {
         QParty party = QParty.party;
+        QCourse course = QCourse.course;
         JPAQueryFactory queryFactory = new JPAQueryFactory(em);
 
         PartyDetailDto result = queryFactory
@@ -61,12 +65,27 @@ public class PartyRepositoryCustomImpl implements PartyRepositoryCustom {
                 party.partyLimit,
                 party.peopleCount,
                 party.startTime,
-                party.endTime
+                party.endTime,
+                null
             ))
             .from(party)
             .where(party.id.eq(id))
             .fetchOne();
 
+        if (result != null) {
+            List<CourseDto> courses = queryFactory
+                .select(Projections.constructor(CourseDto.class,
+                    course.address,
+                    course.title
+                ))
+                .from(course)
+                .where(course.party.id.eq(result.id()))
+                .fetch();
+
+            result = result.withCourses(courses);
+        }
+
         return Optional.ofNullable(result);
     }
+
 }

@@ -1,4 +1,4 @@
-package unip.universityInParty;
+package unip.universityInParty.universityVerification;
 
 import jakarta.mail.internet.MimeMessage;
 import org.junit.jupiter.api.BeforeEach;
@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mail.javamail.JavaMailSender;
 import unip.universityInParty.domain.member.entity.Member;
@@ -43,23 +44,12 @@ public class UniversityVerificationServiceTest {
     private static final String EMAIL = "quddnddl35@naver.com";
     private static final Long MEMBER_ID = 1L;
 
-    @BeforeEach
-    public void setUp() {
-        // Mock MimeMessage 생성
-        MimeMessage mimeMessage = mock(MimeMessage.class);
-        lenient().when(javaMailSender.createMimeMessage()).thenReturn(mimeMessage); // lenient 설정 사용
-    }
-
     @Test
     public void testSendVerificationEmail() {
         // Arrange
-        String expectedAuthCode = "123456"; // 예제 코드 (랜덤 생성 코드와 맞춰야 함)
+        MimeMessage message = Mockito.mock(MimeMessage.class); // MimeMessage Mock 생성
+        when(javaMailSender.createMimeMessage()).thenReturn(message); // createMimeMessage 메서드 Mock 설정
         doNothing().when(javaMailSender).send(any(MimeMessage.class)); // 이메일 전송 메서드 Mock 설정
-        when(universityVerificationRepository.save(any(UniversityVerification.class))).thenAnswer(invocation -> {
-            UniversityVerification verification = invocation.getArgument(0);
-            verification.setAuthCode(expectedAuthCode); // Mock으로 인증 코드 설정
-            return verification;
-        });
 
         // Act
         universityVerificationService.sendVerificationEmail(EMAIL);

@@ -20,6 +20,7 @@ import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class RefreshService {
     private final RefreshRepository refreshRepository;
     private final long refreshTokenExpireTime = 86400L; // 1일
@@ -37,20 +38,11 @@ public class RefreshService {
         refreshRepository.save(refresh);
     }
 
-    @Transactional(readOnly = true)
-    public Boolean existsByToken(String token) {
-        return refreshRepository.existsByToken(token);
-    }
 
-    @Transactional(readOnly = true)
     public Boolean existsByUsername(String username) {
         return refreshRepository.existsByUsername(username);
     }
 
-    @Transactional
-    public void deleteByToken(String token) {
-        refreshRepository.deleteByToken(token);
-    }
 
     @Transactional
     public void deleteByUsername(String username) {
@@ -58,7 +50,7 @@ public class RefreshService {
     }
 
     public List<Refresh> get(){return refreshRepository.findAll();}
-
+    @Transactional
     public Map<String, String> refreshAccessToken(String refreshToken, HttpServletResponse response) {
         // 만료 시간 체크 및 토큰 검증
         if (jwtUtil.isExpired(refreshToken)) {
