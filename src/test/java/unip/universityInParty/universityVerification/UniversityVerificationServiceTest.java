@@ -1,4 +1,4 @@
-package unip.universityInParty;
+package unip.universityInParty.universityVerification;
 
 import jakarta.mail.internet.MimeMessage;
 import org.junit.jupiter.api.BeforeEach;
