@@ -15,6 +15,7 @@ import unip.universityInParty.domain.friend.entity.QFriend;
 import unip.universityInParty.domain.member.entity.QMember;
 import unip.universityInParty.domain.party.dto.response.PartyDetailDto;
 import unip.universityInParty.domain.party.dto.response.PartyResponseDto;
+import unip.universityInParty.domain.party.entity.Party;
 import unip.universityInParty.domain.party.entity.QParty;
 
 import java.time.LocalDateTime;
@@ -57,35 +58,39 @@ public class PartyRepositoryCustomImpl implements PartyRepositoryCustom {
         QCourse course = QCourse.course;
         JPAQueryFactory queryFactory = new JPAQueryFactory(em);
 
-        PartyDetailDto result = queryFactory
-            .select(Projections.constructor(PartyDetailDto.class,
-                party.id,
-                party.title,
-                party.content,
-                party.partyLimit,
-                party.peopleCount,
-                party.startTime,
-                party.endTime,
-                null
-            ))
-            .from(party)
+        // Party 정보 가져오기
+        Party result = queryFactory
+            .selectFrom(party)
             .where(party.id.eq(id))
             .fetchOne();
 
-        if (result != null) {
-            List<CourseDto> courses = queryFactory
-                .select(Projections.constructor(CourseDto.class,
-                    course.address,
-                    course.title
-                ))
-                .from(course)
-                .where(course.party.id.eq(result.id()))
-                .fetch();
-
-            result = result.withCourses(courses);
+        if (result == null) {
+            return Optional.empty();
         }
 
-        return Optional.ofNullable(result);
+        // Course 정보 가져오기
+        List<CourseDto> courses = queryFactory
+            .select(Projections.constructor(CourseDto.class,
+                course.address,
+                course.title
+            ))
+            .from(course)
+            .where(course.party.id.eq(result.getId()))
+            .fetch();
+
+        // PartyDetailDto 생성
+        PartyDetailDto partyDetailDto = PartyDetailDto.builder()
+            .id(result.getId())
+            .title(result.getTitle())
+            .content(result.getContent())
+            .limit(result.getPartyLimit())
+            .peopleCount(result.getPeopleCount())
+            .startTime(result.getStartTime())
+            .endTime(result.getEndTime())
+            .courses(courses)
+            .build();
+
+        return Optional.ofNullable(partyDetailDto);
     }
 
 }
