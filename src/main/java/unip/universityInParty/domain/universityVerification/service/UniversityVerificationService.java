@@ -97,7 +97,5 @@ public class UniversityVerificationService {
             throw new CustomException(MemberErrorCode.INVALID_AUTH_CODE);
         }
     }
-
-
 }
 

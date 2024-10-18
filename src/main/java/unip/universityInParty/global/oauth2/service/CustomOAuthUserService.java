@@ -26,7 +26,6 @@ public class CustomOAuthUserService extends DefaultOAuth2UserService {
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
 
         OAuth2User oAuth2User = super.loadUser(userRequest);
-        System.out.println(oAuth2User.getAttributes());
 
         // OAuth2Response를 제공업체에 따라 추출
         OAuth2Response oAuth2Response = getOAuth2Response(userRequest.getClientRegistration().getRegistrationId(), oAuth2User.getAttributes());
@@ -61,12 +60,9 @@ public class CustomOAuthUserService extends DefaultOAuth2UserService {
     }
 
     private Member updateOrCreateMember(String username, OAuth2Response oAuth2Response) {
+        // 사용자가 있으면 가져오고, 없으면 새 사용자 생성
         Member member = memberRepository.findByUsername(username)
-            .orElse(null);
-
-        if (member == null) {
-            // 새 사용자 생성
-            member = Member.builder()
+            .orElseGet(() -> Member.builder()
                 .username(username)
                 .name(oAuth2Response.getName())
                 .email(oAuth2Response.getEmail())
@@ -75,13 +71,13 @@ public class CustomOAuthUserService extends DefaultOAuth2UserService {
                 .point(0)
                 .auth(false)
                 .status(Status.BORED)
-                .build();
-        } else {
-            member.setProfile_image(oAuth2Response.getProfileImage());
-            // 기존 사용자 업데이트
-            member.setEmail(oAuth2Response.getEmail());
-            member.setName(oAuth2Response.getName());
-        }
+                .build()
+            );
+
+        // 사용자 정보를 업데이트
+        member.setProfile_image(oAuth2Response.getProfileImage());
+        member.setEmail(oAuth2Response.getEmail());
+        member.setName(oAuth2Response.getName());
 
         // 사용자 정보를 데이터베이스에 저장
         return memberRepository.save(member);

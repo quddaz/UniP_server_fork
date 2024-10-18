@@ -37,20 +37,12 @@ public class RefreshService {
         refreshRepository.save(refresh);
     }
 
-    @Transactional(readOnly = true)
-    public Boolean existsByToken(String token) {
-        return refreshRepository.existsByToken(token);
-    }
 
     @Transactional(readOnly = true)
     public Boolean existsByUsername(String username) {
         return refreshRepository.existsByUsername(username);
     }
 
-    @Transactional
-    public void deleteByToken(String token) {
-        refreshRepository.deleteByToken(token);
-    }
 
     @Transactional
     public void deleteByUsername(String username) {

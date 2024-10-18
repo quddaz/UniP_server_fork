@@ -3,7 +3,10 @@ package unip.universityInParty.domain.party.dto.response;
 
 import lombok.Builder;
 import java.time.LocalDateTime;
+import java.util.List;
+
 import io.swagger.v3.oas.annotations.media.Schema;
+import unip.universityInParty.domain.course.dto.CourseDto;
 
 @Builder
 @Schema(description = "파티 상세 정보 DTO")
@@ -27,6 +30,11 @@ public record PartyDetailDto(
     LocalDateTime startTime,
 
     @Schema(description = "끝나는 시간", example = "2024-10-10T15:00:00")
-    LocalDateTime endTime
+    LocalDateTime endTime,
+    @Schema(description = "코스리스트", example = "[{\"address\": \"서울특별시 중구 세종대로 110\", \"title\": \"서울 술집\"}]")
+    List<CourseDto> courses
 ) {
+    public PartyDetailDto withCourses(List<CourseDto> courses) {
+        return new PartyDetailDto(id, title, content, limit, peopleCount, startTime, endTime, courses);
+    }
 }
