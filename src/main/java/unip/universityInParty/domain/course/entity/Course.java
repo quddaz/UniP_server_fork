@@ -16,7 +16,8 @@ public class Course {
     private long id;
 
     private String address;
-    private String title;
+    private String name;
+    private String content;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "party_id")

@@ -40,7 +40,8 @@ public class CourseService {
         List<Course> courses = courseDtoList.stream()
             .map(courseDto -> Course.builder()
                 .address(courseDto.address())
-                .title(courseDto.title())
+                .name(courseDto.name())
+                .content(courseDto.content())
                 .party(party)
                 .build())
             .collect(Collectors.toList());

@@ -72,7 +72,8 @@ public class PartyRepositoryCustomImpl implements PartyRepositoryCustom {
         List<CourseDto> courses = queryFactory
             .select(Projections.constructor(CourseDto.class,
                 course.address,
-                course.title
+                course.name,
+                course.content
             ))
             .from(course)
             .where(course.party.id.eq(result.getId()))
