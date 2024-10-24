@@ -3,6 +3,7 @@ package unip.universityInParty.domain.party.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import unip.universityInParty.domain.member.entity.Member;
+import unip.universityInParty.domain.party.dto.request.PartyDto;
 import unip.universityInParty.global.exception.custom.CustomException;
 
 
@@ -58,5 +59,25 @@ public class Party {
         peopleCount--;
     }
 
+    public static Party createParty(PartyDto partyDto, Member member) {
+        return Party.builder()
+            .title(partyDto.title())
+            .content(partyDto.content())
+            .partyLimit(partyDto.limit())
+            .peopleCount(0)
+            .startTime(partyDto.startTime())
+            .endTime(partyDto.endTime())
+            .member(member)
+            .isClosed(false)
+            .build();
+    }
 
+    // 엔티티 업데이트 메서드
+    public void updateParty(PartyDto partyDto) {
+        this.title = partyDto.title();
+        this.content = partyDto.content();
+        this.partyLimit = partyDto.limit();
+        this.startTime = partyDto.startTime();
+        this.endTime = partyDto.endTime();
+    }
 }

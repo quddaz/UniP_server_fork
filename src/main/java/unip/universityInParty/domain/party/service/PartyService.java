@@ -9,6 +9,7 @@ import unip.universityInParty.domain.course.service.CourseService;
 import unip.universityInParty.domain.member.entity.Member;
 import unip.universityInParty.domain.member.repository.MemberRepository;
 import unip.universityInParty.domain.party.dto.request.PartyDto;
+import unip.universityInParty.domain.party.dto.request.PartyGptDto;
 import unip.universityInParty.domain.party.dto.response.PartyDetailDto;
 import unip.universityInParty.domain.party.dto.response.PartyResponseDto;
 import unip.universityInParty.domain.party.entity.Party;
@@ -45,29 +46,6 @@ public class PartyService {
         return partyRepository.getMainPartyPage();
     }
 
-    // 새로운 파티를 생성하고, 관련된 코스를 저장합니다.
-    @Transactional
-    public Party create(PartyDto partyDto, Long memberId, List<CourseDto> courseDtos){
-        Member member = memberRepository.findById(memberId)
-            .orElseThrow(() -> new CustomException(MemberErrorCode.MEMBER_NOT_FOUND));
-        Party party = Party.builder()
-            .title(partyDto.title())
-            .content(partyDto.content())
-            .partyLimit(partyDto.limit())
-            .peopleCount(0)
-            .startTime(partyDto.startTime())
-            .endTime(partyDto.endTime())
-            .member(member)
-            .isClosed(false)
-            .build();
-        Party savedParty = partyRepository.save(party);
-
-        // Courses 저장
-        courseService.create(courseDtos, savedParty);
-
-        return savedParty;
-    }
-
     // 파티를 삭제하고, 관련된 멤버 및 코스를 함께 삭제합니다.
     @Transactional
     public void delete(Long partyId, Long memberId){
@@ -86,26 +64,43 @@ public class PartyService {
         }
     }
 
-    // 파티 정보를 업데이트하고, 관련된 코스를 업데이트합니다.
+
+    @Transactional
+    public Party create(PartyDto partyDto, Long memberId) {
+        Member member = validateMember(memberId);
+        Party party = Party.createParty(partyDto, member);
+        Party savedParty = partyRepository.save(party);
+
+        // Courses 저장
+        courseService.create(partyDto.courses(), savedParty);
+
+        return savedParty;
+    }
+
     @Transactional
     public void update(Long partyId, PartyDto partyDto, Long memberId, List<CourseDto> courseDtos) {
+        Party party = validatePartyOwnership(partyId, memberId);
+        party.updateParty(partyDto); // 엔티티의 업데이트 메서드 사용
+        partyRepository.save(party);
+
+        // Courses 업데이트
+        courseService.update(courseDtos, party);
+    }
+
+    // 공통 로직: 멤버 검증
+    private Member validateMember(Long memberId) {
+        return memberRepository.findById(memberId)
+            .orElseThrow(() -> new CustomException(MemberErrorCode.MEMBER_NOT_FOUND));
+    }
+
+    private Party validatePartyOwnership(Long partyId, Long memberId) {
         Party party = partyRepository.findById(partyId)
             .orElseThrow(() -> new CustomException(PartyErrorCode.PARTY_NOT_FOUND));
-        Member member = memberRepository.findById(memberId)
-            .orElseThrow(() -> new CustomException(MemberErrorCode.MEMBER_NOT_FOUND));
+        Member member = validateMember(memberId);
 
-        // 해당 파티가 현재 사용자에 의해 소유되고 있는지 확인
-        if (party.getMember().equals(member) && !party.isClosed()) {
-            party.setTitle(partyDto.title());
-            party.setContent(partyDto.content());
-            party.setPartyLimit(partyDto.limit());
-            party.setStartTime(partyDto.startTime());
-            party.setEndTime(partyDto.endTime());
-            partyRepository.save(party); // 파티 업데이트
-            // Courses 업데이트
-            courseService.update(courseDtos, party);
-        } else {
+        if (!party.getMember().equals(member) || party.isClosed()) {
             throw new CustomException(PartyErrorCode.UNAUTHORIZED_ACCESS);
         }
+        return party;
     }
 }
