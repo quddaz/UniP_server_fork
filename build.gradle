@@ -16,7 +16,15 @@ java {
 repositories {
 	mavenCentral()
 }
+ext {
+	set('springCloudVersion', "2023.0.3")
+}
 
+dependencyManagement {
+	imports {
+		mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+	}
+}
 dependencies {
 	// Swagger
 	implementation group: 'org.springdoc', name: 'springdoc-openapi-starter-webmvc-ui', version: '2.2.0'
@@ -60,6 +68,10 @@ dependencies {
 	testImplementation 'org.mockito:mockito-core:4.8.1'
 	// Spring Boot Test with Mockito
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	// JSON
+	implementation 'com.fasterxml.jackson.core:jackson-databind'
+	// OpenFeign
+	implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
 }
 
 tasks.named('test') {

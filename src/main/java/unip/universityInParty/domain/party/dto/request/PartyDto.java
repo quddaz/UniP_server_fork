@@ -36,4 +36,15 @@ public record PartyDto(
     @Schema(description = "코스 목록", implementation = CourseDto.class)
     List<CourseDto> courses
 ) {
+    public static PartyDto toPartyDto(PartyGptDto partyGptDto){
+        List<CourseDto> courseDtoList = CourseDto.toCourseDto(partyGptDto.courses());
+        return PartyDto.builder()
+            .title(partyGptDto.title())
+            .content(partyGptDto.content())
+            .limit(partyGptDto.limit())
+            .startTime(partyGptDto.startTime())
+            .endTime(partyGptDto.endTime())
+            .courses(courseDtoList)
+            .build();
+    }
 }
