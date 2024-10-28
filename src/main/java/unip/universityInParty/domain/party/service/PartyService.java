@@ -13,6 +13,7 @@ import unip.universityInParty.domain.party.dto.request.PartyGptDto;
 import unip.universityInParty.domain.party.dto.response.PartyDetailDto;
 import unip.universityInParty.domain.party.dto.response.PartyResponseDto;
 import unip.universityInParty.domain.party.entity.Party;
+import unip.universityInParty.domain.party.entity.type.PartyType;
 import unip.universityInParty.domain.party.repository.PartyRepository;
 import unip.universityInParty.domain.pmList.service.PMListService;
 import unip.universityInParty.global.exception.custom.CustomException;
@@ -42,8 +43,8 @@ public class PartyService {
     }
 
     // 메인 페이지에 표시할 파티 리스트를 조회합니다.
-    public List<PartyResponseDto> getPartyMainPage(){
-        return partyRepository.getMainPartyPage();
+    public List<PartyResponseDto> getPartyMainPage(PartyType partyType){
+        return partyRepository.getMainPartyPage(partyType);
     }
 
     // 파티를 삭제하고, 관련된 멤버 및 코스를 함께 삭제합니다.

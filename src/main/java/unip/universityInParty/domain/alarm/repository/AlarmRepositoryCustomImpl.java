@@ -15,12 +15,9 @@ import java.util.List;
 
 @RequiredArgsConstructor
 public class AlarmRepositoryCustomImpl implements AlarmRepositoryCustom{
-    @PersistenceContext
-    private EntityManager em;
-
+    private final JPAQueryFactory queryFactory;
     @Override
     public List<AlarmResponseDTO> findAlarmsByReceiverId(Long receiverId) {
-        JPAQueryFactory queryFactory = new JPAQueryFactory(em);
         QAlarm alarm = QAlarm.alarm;
         QAlarmDetail alarmDetail = QAlarmDetail.alarmDetail;
         QMember sender = QMember.member;

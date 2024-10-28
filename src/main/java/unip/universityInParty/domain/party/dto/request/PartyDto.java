@@ -6,6 +6,7 @@ import unip.universityInParty.domain.course.dto.CourseDto;
 import java.time.LocalDateTime;
 import java.util.List;
 import io.swagger.v3.oas.annotations.media.Schema;
+import unip.universityInParty.domain.party.entity.type.PartyType;
 
 @Builder
 @Schema(description = "파티 정보 DTO")
@@ -22,6 +23,8 @@ public record PartyDto(
     @Schema(description = "최대 인원 수", example = "10")
     int limit,
 
+    @Schema(description = "파티 타입", example = "RESTAURANT,BAR,COMPREHENSIVE")
+    PartyType partyType,
     @NotNull(message = "시작 시간을 설정해야 합니다.")
     @FutureOrPresent(message = "미래의 시간이여야 합니다")
     @Schema(description = "시작 시간", example = "2024-10-10T10:00:00")
@@ -43,6 +46,7 @@ public record PartyDto(
             .content(partyGptDto.content())
             .limit(partyGptDto.limit())
             .startTime(partyGptDto.startTime())
+            .partyType(PartyType.COMPREHENSIVE)
             .endTime(partyGptDto.endTime())
             .courses(courseDtoList)
             .build();

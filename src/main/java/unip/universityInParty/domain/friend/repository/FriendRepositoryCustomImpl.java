@@ -16,12 +16,10 @@ import java.util.List;
 @Repository
 @RequiredArgsConstructor
 public class FriendRepositoryCustomImpl implements FriendRepositoryCustom {
-    @PersistenceContext
-    private EntityManager em;
+    private final JPAQueryFactory queryFactory;
 
     @Override
     public List<FriendDTO> getMyFriend(Long id) {
-        JPAQueryFactory queryFactory = new JPAQueryFactory(em);
         QMember member = QMember.member;
         QFriend friend = QFriend.friend;
 
@@ -39,7 +37,6 @@ public class FriendRepositoryCustomImpl implements FriendRepositoryCustom {
 
     @Override
     public List<FriendDTO> getBoredFriend(Long id) {
-        JPAQueryFactory queryFactory = new JPAQueryFactory(em);
         QMember member = QMember.member;
         QFriend friend = QFriend.friend;
 

@@ -7,6 +7,7 @@ import java.util.List;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import unip.universityInParty.domain.course.dto.CourseDto;
+import unip.universityInParty.domain.party.entity.type.PartyType;
 
 @Builder
 @Schema(description = "파티 상세 정보 DTO")
@@ -34,7 +35,4 @@ public record PartyDetailDto(
     @Schema(description = "코스리스트", example = "[{\"address\": \"서울특별시 중구 세종대로 110\", \"title\": \"서울 술집\"}]")
     List<CourseDto> courses
 ) {
-    public PartyDetailDto withCourses(List<CourseDto> courses) {
-        return new PartyDetailDto(id, title, content, limit, peopleCount, startTime, endTime, courses);
-    }
 }

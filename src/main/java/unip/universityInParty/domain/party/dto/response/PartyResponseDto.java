@@ -2,6 +2,7 @@ package unip.universityInParty.domain.party.dto.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
+import unip.universityInParty.domain.party.entity.type.PartyType;
 
 import java.time.LocalDateTime;
 @Builder
@@ -15,6 +16,8 @@ public record PartyResponseDto(
 
     @Schema(description = "파티 제목", example = "여름 바비큐 파티")
     String title,
+    @Schema(description = "파티 타입", example = "RESTAURANT,BAR,COMPREHENSIVE")
+    PartyType partyType,
 
     @Schema(description = "최대 인원 수", example = "10")
     int limit,
