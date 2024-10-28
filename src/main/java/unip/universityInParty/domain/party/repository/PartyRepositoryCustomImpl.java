@@ -1,5 +1,6 @@
 package unip.universityInParty.domain.party.repository;
 
+import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.FetchableQuery;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.JPAExpressions;
@@ -17,6 +18,7 @@ import unip.universityInParty.domain.party.dto.response.PartyDetailDto;
 import unip.universityInParty.domain.party.dto.response.PartyResponseDto;
 import unip.universityInParty.domain.party.entity.Party;
 import unip.universityInParty.domain.party.entity.QParty;
+import unip.universityInParty.domain.party.entity.type.PartyType;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -25,30 +27,37 @@ import java.util.Optional;
 @Repository
 @RequiredArgsConstructor
 public class PartyRepositoryCustomImpl implements PartyRepositoryCustom {
-    @PersistenceContext
-    private EntityManager em;
+
+    private final JPAQueryFactory queryFactory;
 
     @Override
-    public List<PartyResponseDto> getMainPartyPage() {
+    public List<PartyResponseDto> getMainPartyPage(PartyType partyType) {
         QParty party = QParty.party;
         QMember member = QMember.member;
-        JPAQueryFactory queryFactory = new JPAQueryFactory(em);
+
+        BooleanBuilder builder = new BooleanBuilder();
+        builder.and(party.endTime.goe(LocalDateTime.now())); // 현재 시간 이후의 파티만 조회
+        builder.and(party.isClosed.eq(false)); // isClosed가 false인 파티만 조회
+
+        // 파티 타입이 null이 아니면 해당 조건을 추가
+        if (partyType != null) {
+            builder.and(party.partyType.eq(partyType));
+        }
+
         return queryFactory
             .select(Projections.constructor(PartyResponseDto.class,
                 member.name,
                 member.profile_image,
                 party.title,
+                party.partyType,
                 party.partyLimit,
                 party.peopleCount,
                 party.startTime,
                 party.endTime
-                ))
+            ))
             .from(party)
             .join(party.member, member)
-            .where(
-                party.endTime.goe(LocalDateTime.now()) // 현재 시간 이후의 파티만 조회
-                    .and(party.isClosed.eq(false)) // isClosed가 false인 파티만 조회
-            )
+            .where(builder)
             .fetch();
     }
 
@@ -56,7 +65,6 @@ public class PartyRepositoryCustomImpl implements PartyRepositoryCustom {
     public Optional<PartyDetailDto> findPartyDetailById(Long id) {
         QParty party = QParty.party;
         QCourse course = QCourse.course;
-        JPAQueryFactory queryFactory = new JPAQueryFactory(em);
 
         // Party 정보 가져오기
         Party result = queryFactory

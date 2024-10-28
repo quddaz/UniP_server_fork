@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import unip.universityInParty.domain.member.entity.Member;
 import unip.universityInParty.domain.party.dto.request.PartyDto;
+import unip.universityInParty.domain.party.entity.type.PartyType;
 import unip.universityInParty.global.exception.custom.CustomException;
 
 
@@ -31,6 +32,8 @@ public class Party {
     private LocalDateTime startTime;
 
     private LocalDateTime endTime;
+
+    private PartyType partyType;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
@@ -63,6 +66,7 @@ public class Party {
         return Party.builder()
             .title(partyDto.title())
             .content(partyDto.content())
+            .partyType(partyDto.partyType())
             .partyLimit(partyDto.limit())
             .peopleCount(0)
             .startTime(partyDto.startTime())
@@ -78,6 +82,7 @@ public class Party {
         this.content = partyDto.content();
         this.partyLimit = partyDto.limit();
         this.startTime = partyDto.startTime();
+        this.partyType = partyDto.partyType();
         this.endTime = partyDto.endTime();
     }
 }
