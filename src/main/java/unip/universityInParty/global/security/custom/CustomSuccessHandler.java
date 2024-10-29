@@ -35,8 +35,8 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         String username = customUserDetails.getUsername();
         String role = customUserDetails.getAuthorities().iterator().next().getAuthority();
 
-        String accessToken = jwtUtil.createAccessJwt(username, role, "access", customUserDetails.getAuth());
-        String refreshToken = jwtUtil.createRefreshJwt(username, role, "refresh", customUserDetails.getAuth());
+        String accessToken = jwtUtil.createAccessJwt(username, role);
+        String refreshToken = jwtUtil.createRefreshJwt(username, role);
 
         if (refreshService.existsByUsername(username)) {
             refreshService.deleteByUsername(username);
