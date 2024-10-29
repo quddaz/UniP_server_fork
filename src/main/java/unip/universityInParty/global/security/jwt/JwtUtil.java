@@ -66,44 +66,12 @@ public class JwtUtil {
             .get("role", String.class);
     }
 
-    // 토큰 만료 여부 확인
-    public Boolean isExpired(String token) {
-        return Jwts.parser()
-            .setSigningKey(secretKey)
-            .build()
-            .parseClaimsJws(token)
-            .getBody()
-            .getExpiration()
-            .before(new Date());
-    }
-
-    // 카테고리 가져오기
-    public String getCategory(String token) {
-        return Jwts.parser()
-            .setSigningKey(secretKey)
-            .build()
-            .parseClaimsJws(token)
-            .getBody()
-            .get("category", String.class);
-    }
-
-    // 인증 여부 가져오기
-    public boolean getAuth(String token) {
-        return Jwts.parser()
-            .setSigningKey(secretKey)
-            .build()
-            .parseClaimsJws(token)
-            .getBody()
-            .get("auth", Boolean.class);
-    }
 
     // Access JWT 생성
-    public String createAccessJwt(String username, String role, String category, boolean auth) {
+    public String createAccessJwt(String username, String role) {
         return Jwts.builder()
-            .claim("category", category)
             .claim("username", username)
             .claim("role", role)
-            .claim("auth", auth)
             .setIssuedAt(new Date(System.currentTimeMillis()))
             .setExpiration(new Date(System.currentTimeMillis() + AccessTokenRemiteTime))
             .signWith(secretKey, SignatureAlgorithm.HS256)
@@ -111,12 +79,10 @@ public class JwtUtil {
     }
 
     // Refresh JWT 생성
-    public String createRefreshJwt(String username, String role, String category, boolean auth) {
+    public String createRefreshJwt(String username, String role) {
         return Jwts.builder()
-            .claim("category", category)
             .claim("username", username)
             .claim("role", role)
-            .claim("auth", auth)
             .setIssuedAt(new Date(System.currentTimeMillis()))
             .setExpiration(new Date(System.currentTimeMillis() + RefreshTokenRemiteTime))
             .signWith(secretKey, SignatureAlgorithm.HS256)

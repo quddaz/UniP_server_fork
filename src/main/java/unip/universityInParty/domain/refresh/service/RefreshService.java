@@ -2,6 +2,7 @@ package unip.universityInParty.domain.refresh.service;
 
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import unip.universityInParty.domain.member.entity.Member;
@@ -23,19 +24,18 @@ import java.util.Map;
 @Transactional(readOnly = true)
 public class RefreshService {
     private final RefreshRepository refreshRepository;
-    private final long refreshTokenExpireTime = 86400L; // 1일
     private final JwtUtil jwtUtil;
     private final MemberRepository memberRepository;
     private final CookieStore cookieStore;
 
     @Transactional
     public void addRefresh(String username, String token) {
+
         Refresh refresh = Refresh.builder()
             .username(username)
             .token(token)
-            .expiration(refreshTokenExpireTime) // Redis의 TTL(Time-to-live) 기능 사용
             .build();
-        refreshRepository.save(refresh);
+        refreshRepository.save(refresh);  // username을 키로 저장
     }
 
 
@@ -46,29 +46,32 @@ public class RefreshService {
 
     @Transactional
     public void deleteByUsername(String username) {
-        refreshRepository.deleteByUsername(username);
+        refreshRepository.deleteById(username);
     }
 
-    public List<Refresh> get(){return refreshRepository.findAll();}
+    public List<Refresh> get(){return (List<Refresh>) refreshRepository.findAll();}
     @Transactional
     public void refreshAccessToken(String refreshToken, HttpServletResponse response) {
-
+        // 토큰 유효성 검사
         jwtUtil.validateToken(refreshToken);
-        // DB에 저장되어 있는지 확인
+
+        // Redis에 저장된 리프레시 토큰과 비교
         String username = jwtUtil.getUsername(refreshToken);
+        if (!refreshRepository.existsByToken(refreshToken)) {
+            throw new CustomException(OAuthErrorCode.INVALID_REFRESH_TOKEN);
+        }
+
         Member member = memberRepository.findByUsername(username)
             .orElseThrow(() -> new CustomException(MemberErrorCode.MEMBER_NOT_FOUND));
 
-        // 새로운 Access 및 Refresh 토큰 생성
-        String newAccess = jwtUtil.createAccessJwt(member.getUsername(), String.valueOf(member.getRole()), "access", member.isAuth());
-        String newRefresh = jwtUtil.createRefreshJwt(member.getUsername(), String.valueOf(member.getRole()), "refresh", member.isAuth());
+        // 새 토큰 생성 및 갱신
+        String newAccess = jwtUtil.createAccessJwt(member.getUsername(), String.valueOf(member.getRole()));
+        String newRefresh = jwtUtil.createRefreshJwt(member.getUsername(), String.valueOf(member.getRole()));
 
-        //Redis Refresh 토큰 갱신
-        deleteByUsername(username);
+        deleteByUsername(member.getUsername());
         addRefresh(username, newRefresh);
-        // Refresh 토큰 저장 및 응답 설정
+
         response.addCookie(cookieStore.createCookie(newRefresh));
         response.setHeader("access", newAccess);
-
     }
 }

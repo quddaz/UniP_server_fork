@@ -1,8 +1,8 @@
 package unip.universityInParty.domain.refresh.entity;
 
 
+import org.springframework.data.annotation.Id; // Spring Data Redis의 @Id import
 
-import jakarta.persistence.Id;
 import lombok.*;
 import org.springframework.data.redis.core.RedisHash;
 import org.springframework.data.redis.core.TimeToLive;
@@ -14,19 +14,12 @@ import org.springframework.data.redis.core.index.Indexed;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@RedisHash(value = "refresh")
+@RedisHash(value = "refresh", timeToLive = 86400)
 public class Refresh {
 
     @Id
-    private Long id;
-
-    @Indexed
     private String username;
 
-    @Indexed
     private String token;
-
-    @TimeToLive
-    private long expiration;
 
 }
