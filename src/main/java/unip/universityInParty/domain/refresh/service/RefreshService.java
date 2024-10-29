@@ -51,17 +51,9 @@ public class RefreshService {
 
     public List<Refresh> get(){return refreshRepository.findAll();}
     @Transactional
-    public Map<String, String> refreshAccessToken(String refreshToken, HttpServletResponse response) {
-        // 만료 시간 체크 및 토큰 검증
-        if (jwtUtil.isExpired(refreshToken)) {
-            throw new CustomException(OAuthErrorCode.REFRESH_TOKEN_EXPIRED);
-        }
+    public void refreshAccessToken(String refreshToken, HttpServletResponse response) {
 
-        // 토큰이 refresh인지 확인
-        if (!"refresh".equals(jwtUtil.getCategory(refreshToken))) {
-            throw new CustomException(OAuthErrorCode.INVALID_REFRESH_TOKEN);
-        }
-
+        jwtUtil.validateToken(refreshToken);
         // DB에 저장되어 있는지 확인
         String username = jwtUtil.getUsername(refreshToken);
         Member member = memberRepository.findByUsername(username)
@@ -71,13 +63,12 @@ public class RefreshService {
         String newAccess = jwtUtil.createAccessJwt(member.getUsername(), String.valueOf(member.getRole()), "access", member.isAuth());
         String newRefresh = jwtUtil.createRefreshJwt(member.getUsername(), String.valueOf(member.getRole()), "refresh", member.isAuth());
 
+        //Redis Refresh 토큰 갱신
+        deleteByUsername(username);
+        addRefresh(username, newRefresh);
         // Refresh 토큰 저장 및 응답 설정
         response.addCookie(cookieStore.createCookie(newRefresh));
-        Map<String, String> responseBody = new HashMap<>();
-        responseBody.put("name", member.getName());
-        responseBody.put("profile", member.getProfile_image());
         response.setHeader("access", newAccess);
 
-        return responseBody;
     }
 }

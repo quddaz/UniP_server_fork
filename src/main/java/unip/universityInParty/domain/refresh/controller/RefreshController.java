@@ -9,7 +9,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import unip.universityInParty.domain.refresh.service.RefreshService;
@@ -35,28 +38,17 @@ public class RefreshController {
         @ApiResponse(responseCode = "401", description = "인증 실패"),
         @ApiResponse(responseCode = "404", description = "사용자를 찾을 수 없음")
     })
-    public ResponseEntity<?> refresh(HttpServletRequest request, HttpServletResponse response) {
-        log.info("리프레쉬 재발급");
+    public ResponseEntity<?> reIssueToken(
+        @CookieValue(name = "refresh") String refreshToken, HttpServletResponse response) {
 
-        // 쿠키에서 Refresh 토큰 얻기
-        String refresh = getRefreshTokenFromCookies(request);
-        if (refresh == null) {
-            throw new CustomException(OAuthErrorCode.REFRESH_TOKEN_NULL);
-        }
+        refreshService.refreshAccessToken(refreshToken, response);
 
-        Map<String, String> responseBody = refreshService.refreshAccessToken(refresh, response);
-        return ResponseEntity.ok(ResponseDto.of("Refresh 재발급 성공", responseBody));
+        return ResponseEntity.ok(ResponseDto.of("Refresh 재발급 성공", null));
     }
+    @GetMapping("/refresh")
+    @Operation(summary = "테스트용 토큰 검색", description = "모든 토큰을 꺼내옴")
+    public ResponseEntity<?> getToken() {
 
-    private String getRefreshTokenFromCookies(HttpServletRequest request) {
-        Cookie[] cookies = request.getCookies();
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                if (cookie.getName().equals("refresh")) {
-                    return cookie.getValue();
-                }
-            }
-        }
-        return null;
+        return ResponseEntity.ok(ResponseDto.of("Refresh", refreshService.get()));
     }
 }
