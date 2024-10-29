@@ -16,6 +16,7 @@ import unip.universityInParty.domain.party.dto.request.PartyDto;
 import unip.universityInParty.domain.party.dto.request.PartyGptDto;
 import unip.universityInParty.domain.party.dto.response.PartyDetailDto;
 import unip.universityInParty.domain.party.dto.response.PartyResponseDto;
+import unip.universityInParty.domain.party.dto.response.gpt.ChatResponse;
 import unip.universityInParty.domain.party.entity.Party;
 import unip.universityInParty.domain.party.entity.type.PartyType;
 import unip.universityInParty.domain.party.service.ChatGptService;
@@ -103,11 +104,17 @@ public class PartyController {
     }
     @PostMapping(value = "/gpt")
     @Operation(summary = "gpt 응답 생성", description = "주어진 질문 기반 gpt 응답 생성")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "응답 생성 성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ChatResponse.class)))
+    })
     public ResponseEntity<?> getGpt(@RequestBody String prompt){
         return ResponseEntity.ok().body(ResponseDto.of("gpt 루트 생성 성공",chatGptService.getChatResponse(prompt)));
     }
     @PostMapping(value = "/gpt/create")
     @Operation(summary = "gpt 기반 파티 생성", description = "gpt 응답으로 파티를 생성")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "gpt 기반 파티 생성", content = @Content(mediaType = "application/json", schema = @Schema(implementation = PartyGptDto.class)))
+    })
     public ResponseEntity<?> createGpt(@RequestBody PartyGptDto partyGptDto,
                                        @AuthenticationPrincipal CustomUserDetails customUserDetails){
         Party party = partyService.create(PartyDto.toPartyDto(partyGptDto), customUserDetails.getId());
