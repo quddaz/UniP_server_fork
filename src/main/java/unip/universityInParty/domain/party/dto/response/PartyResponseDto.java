@@ -8,6 +8,8 @@ import java.time.LocalDateTime;
 @Builder
 @Schema(description = "파티 정보 DTO")
 public record PartyResponseDto(
+    @Schema(description = "파티 아이디", example = "1")
+    Long partyId,
     @Schema(description = "파티장의 이름", example = "홍길동")
     String name,
 

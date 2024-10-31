@@ -46,6 +46,7 @@ public class PartyRepositoryCustomImpl implements PartyRepositoryCustom {
 
         return queryFactory
             .select(Projections.constructor(PartyResponseDto.class,
+                party.id,
                 member.name,
                 member.profile_image,
                 party.title,
