@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import unip.universityInParty.domain.party.dto.request.PartyDto;
 import unip.universityInParty.domain.party.dto.request.PartyGptDto;
 import unip.universityInParty.domain.party.dto.response.PartyDetailDto;
+import unip.universityInParty.domain.party.dto.response.PartyMyDto;
 import unip.universityInParty.domain.party.dto.response.PartyResponseDto;
 import unip.universityInParty.domain.party.dto.response.gpt.ChatResponse;
 import unip.universityInParty.domain.party.entity.Party;
@@ -101,6 +102,16 @@ public class PartyController {
     public ResponseEntity<?> getParty(@RequestParam(required = false) PartyType partyType) {
         List<PartyResponseDto> parties = partyService.getPartyMainPage(partyType);
         return ResponseEntity.ok().body(ResponseDto.of("파티 전체 조회 성공", parties));
+    }
+    @GetMapping("/my")
+    @Operation(summary = "자신의 파티 조회", description = "친구를 파티 초대하기 위한 API")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "파티 조회 성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = PartyDetailDto.class))),
+        @ApiResponse(responseCode = "400", description = "잘못된 요청 데이터")
+    })
+    public ResponseEntity<?> getMyParty(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        List<PartyMyDto> parties = partyService.getMyParty(customUserDetails.getId());
+        return ResponseEntity.ok().body(ResponseDto.of("자신의 파티 조회 성공", parties));
     }
     @PostMapping(value = "/gpt")
     @Operation(summary = "gpt 응답 생성", description = "주어진 질문 기반 gpt 응답 생성")
