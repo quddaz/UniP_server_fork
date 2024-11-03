@@ -5,15 +5,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
-import unip.universityInParty.domain.course.dto.CourseDto;
-import unip.universityInParty.domain.party.dto.request.PartyDto;
 import unip.universityInParty.domain.party.dto.request.PartyGptDto;
 import unip.universityInParty.domain.party.dto.request.gpt.ChatRequest;
 import unip.universityInParty.domain.party.dto.response.gpt.ChatResponse;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor

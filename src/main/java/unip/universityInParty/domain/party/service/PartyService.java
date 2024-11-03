@@ -9,13 +9,12 @@ import unip.universityInParty.domain.course.service.CourseService;
 import unip.universityInParty.domain.member.entity.Member;
 import unip.universityInParty.domain.member.repository.MemberRepository;
 import unip.universityInParty.domain.party.dto.request.PartyDto;
-import unip.universityInParty.domain.party.dto.request.PartyGptDto;
 import unip.universityInParty.domain.party.dto.response.PartyDetailDto;
+import unip.universityInParty.domain.party.dto.response.PartyMyDto;
 import unip.universityInParty.domain.party.dto.response.PartyResponseDto;
 import unip.universityInParty.domain.party.entity.Party;
 import unip.universityInParty.domain.party.entity.type.PartyType;
 import unip.universityInParty.domain.party.repository.PartyRepository;
-import unip.universityInParty.domain.pmList.service.PMListService;
 import unip.universityInParty.global.exception.custom.CustomException;
 import unip.universityInParty.global.exception.errorCode.MemberErrorCode;
 import unip.universityInParty.global.exception.errorCode.PartyErrorCode;
@@ -45,6 +44,10 @@ public class PartyService {
     // 메인 페이지에 표시할 파티 리스트를 조회합니다.
     public List<PartyResponseDto> getPartyMainPage(PartyType partyType){
         return partyRepository.getMainPartyPage(partyType);
+    }
+    // 자신의 파티를 조회합니다.
+    public List<PartyMyDto> getMyParty(Long id){
+        return partyRepository.getMyParty(id);
     }
 
     // 파티를 삭제하고, 관련된 멤버 및 코스를 함께 삭제합니다.
