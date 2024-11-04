@@ -43,13 +43,11 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         }
 
         refreshService.addRefresh(username, refreshToken);
-        log.info("AccessToken = {}", accessToken);
-
         Map<String, String> tokenMap = new HashMap<>();
-        tokenMap.put("accessToken", accessToken);
 
-        Cookie cookie = cookieStore.createCookie(refreshToken);
-        response.addCookie(cookie);
+        tokenMap.put("accessToken", accessToken);
+        tokenMap.put("refreshToken", refreshToken);
+        tokenMap.put("auth", String.valueOf(customUserDetails.getAuth()));
 
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
