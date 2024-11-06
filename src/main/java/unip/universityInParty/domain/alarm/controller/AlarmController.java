@@ -9,13 +9,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import unip.universityInParty.domain.oauth.dto.AuthMember;
 import unip.universityInParty.domain.alarm.dto.request.AlarmFriendRequestDTO;
 import unip.universityInParty.domain.alarm.dto.request.AlarmInvitationRequestDTO;
 import unip.universityInParty.domain.alarm.dto.request.AlarmRequestDTO;
 import unip.universityInParty.domain.alarm.dto.response.AlarmResponseDTO;
 import unip.universityInParty.domain.alarm.service.AlarmService;
 import unip.universityInParty.global.baseResponse.ResponseDto;
-import unip.universityInParty.global.security.custom.CustomUserDetails;
+
 import java.util.List;
 
 
@@ -28,25 +29,19 @@ public class AlarmController {
 
     @PostMapping("/friend")
     @Operation(summary = "친구 추가 알람 생성", description = "친구 추가 요청에 대한 알람을 생성합니다.")
-    @ApiResponse(responseCode = "200", description = "친구 알람 생성 성공")
-    @ApiResponse(responseCode = "400", description = "잘못된 요청")
-    @ApiResponse(responseCode = "401", description = "인증 실패")
     public ResponseEntity<?> createFriendRequest(
         @RequestBody AlarmFriendRequestDTO alarmFriendRequestDTO,
-        @AuthenticationPrincipal CustomUserDetails customUserDetails) {
-        alarmService.sendFriendRequestAlarm(alarmFriendRequestDTO.receiver(), customUserDetails.getId());
+        @AuthenticationPrincipal AuthMember authMember) {
+        alarmService.sendFriendRequestAlarm(alarmFriendRequestDTO.receiver(), authMember.getId());
         return ResponseEntity.ok().body(ResponseDto.of("친구 알람 생성 성공", null));
     }
 
     @PostMapping("/invitation")
     @Operation(summary = "초대 알람 생성", description = "초대 요청에 대한 알람을 생성합니다.")
-    @ApiResponse(responseCode = "200", description = "초대 알람 생성 성공")
-    @ApiResponse(responseCode = "400", description = "잘못된 요청")
-    @ApiResponse(responseCode = "401", description = "인증 실패")
     public ResponseEntity<?> createInvitationRequest(
         @RequestBody AlarmInvitationRequestDTO alarmInvitationRequestDTO,
-        @AuthenticationPrincipal CustomUserDetails customUserDetails) {
-        alarmService.sendInvitationAlarm(alarmInvitationRequestDTO.receiver(), customUserDetails.getId(), alarmInvitationRequestDTO.party());
+        @AuthenticationPrincipal AuthMember authMember) {
+        alarmService.sendInvitationAlarm(alarmInvitationRequestDTO.receiver(), authMember.getId(), alarmInvitationRequestDTO.party());
         return ResponseEntity.ok().body(ResponseDto.of("초대 알람 생성 성공", null));
     }
 
@@ -55,16 +50,13 @@ public class AlarmController {
     @ApiResponse(responseCode = "200", description = "알람 조회 성공",
         content = @Content(mediaType = "application/json",
             schema = @Schema(type = "array", implementation = AlarmResponseDTO.class)))
-    @ApiResponse(responseCode = "401", description = "인증 실패")
-    public ResponseEntity<?> getAlarm(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
-        List<AlarmResponseDTO> alarms = alarmService.retrieveMyAlarms(customUserDetails.getId());
+    public ResponseEntity<?> getAlarm(@AuthenticationPrincipal AuthMember authMember) {
+        List<AlarmResponseDTO> alarms = alarmService.retrieveMyAlarms(authMember.getId());
         return ResponseEntity.ok().body(ResponseDto.of("알람 조회 성공", alarms));
     }
 
     @PostMapping("/ok")
     @Operation(summary = "알람 수락", description = "주어진 알람 요청을 수락합니다.")
-    @ApiResponse(responseCode = "200", description = "알람 수락 성공")
-    @ApiResponse(responseCode = "400", description = "잘못된 요청")
     public ResponseEntity<?> okRequest(@RequestBody AlarmRequestDTO alarmRequestDTO) {
         alarmService.processAlarmRequest(alarmRequestDTO.id());
         return ResponseEntity.ok().body(ResponseDto.of("알람 수락 성공", null));
@@ -72,8 +64,6 @@ public class AlarmController {
 
     @PostMapping("/no")
     @Operation(summary = "알람 거절", description = "주어진 알람 요청을 거절합니다.")
-    @ApiResponse(responseCode = "200", description = "알람 거절 성공")
-    @ApiResponse(responseCode = "400", description = "잘못된 요청")
     public ResponseEntity<?> noRequest(@RequestBody AlarmRequestDTO alarmRequestDTO) {
         alarmService.processNoAlarmRequest(alarmRequestDTO.id());
         return ResponseEntity.ok().body(ResponseDto.of("알람 거절 성공", null));

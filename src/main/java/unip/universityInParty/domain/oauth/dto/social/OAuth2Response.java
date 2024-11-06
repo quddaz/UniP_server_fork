@@ -1,4 +1,5 @@
-package unip.universityInParty.global.oauth2.dto;
+package unip.universityInParty.domain.oauth.dto.social;
+
 
 public interface OAuth2Response {
     //제공자 (Ex. naver, google, ...)

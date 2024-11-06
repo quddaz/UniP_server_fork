@@ -8,5 +8,5 @@ import java.util.List;
 @Repository
 
 public interface AlarmRepositoryCustom {
-    public List<AlarmResponseDTO> findAlarmsByReceiverId(Long receiverId);
+    List<AlarmResponseDTO> findAlarmsByReceiverId(Long receiverId);
 }

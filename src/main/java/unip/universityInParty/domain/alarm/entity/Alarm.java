@@ -18,6 +18,7 @@ public class Alarm {
 
     @Column(name = "receiver_id", nullable = false)
     private Long receiver;
+
     @Column(name = "sender_id", nullable = false)
     private Long sender;
 
