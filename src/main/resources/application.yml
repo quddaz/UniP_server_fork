@@ -48,8 +48,7 @@ spring:
             user-info-uri: https://www.googleapis.com/oauth2/v3/userinfo
             user-name-attribute: sub
 
-  jwt:
-    secret: ${JWT_SECRET}
+
   data:
     redis:
       host: ${REDIS_HOST}
@@ -64,3 +63,8 @@ spring:
       mail.smtp.starttls.enable: true
 gpt:
   key: ${GPT_KEY}
+jwt:
+  secret-key: ${JWT_SECRET}
+  issuer: ${JWT_MEMBER}
+  access-token-expiration: 3600000  # 1 hour in milliseconds
+  refresh-token-expiration: 1209600000  # 14 days in milliseconds
