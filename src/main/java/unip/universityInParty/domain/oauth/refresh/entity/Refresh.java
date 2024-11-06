@@ -1,4 +1,4 @@
-package unip.universityInParty.domain.refresh.entity;
+package unip.universityInParty.domain.oauth.refresh.entity;
 
 
 import org.springframework.data.annotation.Id; // Spring Data Redis의 @Id import
@@ -18,7 +18,7 @@ import org.springframework.data.redis.core.index.Indexed;
 public class Refresh {
 
     @Id
-    private String username;
+    private Long id;
 
     private String token;
 

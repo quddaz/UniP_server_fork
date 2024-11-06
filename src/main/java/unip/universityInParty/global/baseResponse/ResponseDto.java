@@ -29,7 +29,9 @@ public class ResponseDto<T> {
     public static <T> ResponseDto<T> fail(Integer status, String message) {
         return new ResponseDto<>(status, message, null, LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
     }
-
+    public static <T> ResponseDto<T> fail_OAuth() {
+        return new ResponseDto<>(401, "로그인을 해주세요", null, LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+    }
     public static <T> ResponseDto<T> fail(Integer status, String message, T data) {
         return new ResponseDto<>(status, message, data, LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
     }

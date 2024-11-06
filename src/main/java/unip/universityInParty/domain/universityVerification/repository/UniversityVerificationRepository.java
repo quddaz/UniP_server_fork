@@ -9,5 +9,5 @@ import java.util.Optional;
 @Repository
 public interface UniversityVerificationRepository extends KeyValueRepository<UniversityVerification, String> {
     Optional<UniversityVerification> findByEmail(String email);
-    void deleteByEmail(String email);
+
 }

@@ -36,6 +36,7 @@ public class AlarmService {
             throw new CustomException(AlarmErrorCode.ALREADY_EXISTS);
         }
     }
+
     // 친구 추가 알림 생성
     @Transactional
     public void sendFriendRequestAlarm(Long receiverId, Long senderId) {
@@ -49,6 +50,7 @@ public class AlarmService {
             .build();
         alarmRepository.save(alarm);
     }
+
     // 초대 알림 생성
     @Transactional
     public void sendInvitationAlarm(Long receiverId, Long senderId, Long partyId) {
@@ -78,6 +80,7 @@ public class AlarmService {
     public List<AlarmResponseDTO> retrieveMyAlarms(Long receiverId) {
         return alarmRepository.findAlarmsByReceiverId(receiverId);
     }
+
     // 알람 요청 처리
     @Transactional
     public void processAlarmRequest(Long alarmId) {
@@ -91,6 +94,7 @@ public class AlarmService {
             handleInvitationAlarm(alarm);
         }
     }
+
     public void acceptFriendRequest(Alarm alarm) {
         // 친구 요청 수락
         friendService.acceptRequest(alarm.getSender(), alarm.getReceiver());
@@ -117,6 +121,7 @@ public class AlarmService {
             alarmRepository.delete(alarm);
         }
     }
+
     public void handleInvitationAlarm(Alarm alarm) {
         // 초대 알림 처리
         AlarmDetail alarmDetail = alarmDetailRepository.findByAlarm(alarm)

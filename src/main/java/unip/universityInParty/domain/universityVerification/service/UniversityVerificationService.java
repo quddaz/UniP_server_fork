@@ -77,11 +77,6 @@ public class UniversityVerificationService {
         universityVerificationRepository.save(verification); // Redis에 저장
     }
 
-    /* 재요청 메서드 */
-    public void reRequest(String email) {
-        universityVerificationRepository.deleteByEmail(email); // 기존 데이터 삭제
-        sendVerificationEmail(email); // 동일한 메서드 호출로 재요청
-    }
 
     /* 인증 코드 검증 메서드 */
     public void verifyAuthCode(String email, String code, Long id) {

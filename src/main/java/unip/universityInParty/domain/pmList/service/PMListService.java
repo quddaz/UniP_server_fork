@@ -69,9 +69,4 @@ public class PMListService {
         pmListRepository.deleteByPartyAndMember(party, member); // 멤버 삭제
     }
 
-    // 주어진 파티에 속한 모든 멤버를 삭제합니다.
-    @Transactional
-    public void deleteByParty(Party party){
-        pmListRepository.deleteByParty(party); // 파티와 관련된 모든 멤버 삭제
-    }
 }

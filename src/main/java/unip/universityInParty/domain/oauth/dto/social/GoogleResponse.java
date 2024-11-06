@@ -1,14 +1,11 @@
-package unip.universityInParty.global.oauth2.dto;
+package unip.universityInParty.domain.oauth.dto.social;
+
+
 
 import java.util.Map;
 
-public class GoogleResponse implements OAuth2Response {
+public record GoogleResponse(Map<String, Object> attribute) implements OAuth2Response {
 
-    private final Map<String, Object> attribute;
-
-    public GoogleResponse(Map<String, Object> attribute) {
-        this.attribute = attribute;
-    }
 
     @Override
     public String getProvider() {
@@ -32,7 +29,6 @@ public class GoogleResponse implements OAuth2Response {
 
     @Override
     public String getProfileImage() {
-        Object picture = attribute.get("picture");
-        return picture != null ? picture.toString() : null;
+        return attribute.get("picture").toString();
     }
 }

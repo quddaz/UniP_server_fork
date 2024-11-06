@@ -12,7 +12,6 @@ import unip.universityInParty.domain.party.entity.type.PartyType;
 @Schema(description = "파티 정보 DTO")
 public record PartyDto(
     @NotEmpty(message = "타이틀을 작성해야합니다.")
-    @Schema(description = "파티 제목", example = "여름 바비큐 파티")
     String title,
 
     @NotEmpty(message = "내용을 작성해야합니다.")
@@ -23,7 +22,7 @@ public record PartyDto(
     @Schema(description = "최대 인원 수", example = "10")
     int limit,
 
-    @Schema(description = "파티 타입", example = "RESTAURANT,BAR,COMPREHENSIVE")
+    @Schema(description = "파티 타입", example = "RESTAURANT,BAR,COMPREHENSIVE 중 1개")
     PartyType partyType,
     @NotNull(message = "시작 시간을 설정해야 합니다.")
     @FutureOrPresent(message = "미래의 시간이여야 합니다")

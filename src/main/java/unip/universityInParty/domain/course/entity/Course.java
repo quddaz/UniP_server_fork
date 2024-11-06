@@ -16,7 +16,9 @@ public class Course {
     private long id;
 
     private String address;
+
     private String name;
+
     private String content;
 
     @ManyToOne(fetch = FetchType.LAZY)
