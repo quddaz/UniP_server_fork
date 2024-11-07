@@ -18,26 +18,18 @@ import unip.universityInParty.domain.party.entity.type.PartyType;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-
 @Repository
 @RequiredArgsConstructor
 public class PartyRepositoryCustomImpl implements PartyRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
+    private final QParty party = QParty.party;
+    private final QMember member = QMember.member;
+    private final QCourse course = QCourse.course;
 
     @Override
     public List<PartyResponseDto> getMainPartyPage(PartyType partyType) {
-        QParty party = QParty.party;
-        QMember member = QMember.member;
-
-        BooleanBuilder builder = new BooleanBuilder();
-        builder.and(party.endTime.goe(LocalDateTime.now())); // 현재 시간 이후의 파티만 조회
-        builder.and(party.isClosed.eq(false)); // isClosed가 false인 파티만 조회
-
-        // 파티 타입이 null이 아니면 해당 조건을 추가
-        if (partyType != null) {
-            builder.and(party.partyType.eq(partyType));
-        }
+        BooleanBuilder conditions = createMainPartyConditions(partyType);
 
         return queryFactory
             .select(Projections.constructor(PartyResponseDto.class,
@@ -53,16 +45,12 @@ public class PartyRepositoryCustomImpl implements PartyRepositoryCustom {
             ))
             .from(party)
             .join(party.member, member)
-            .where(builder)
+            .where(conditions)
             .fetch();
     }
 
     @Override
     public Optional<PartyDetailDto> findPartyDetailById(Long id) {
-        QParty party = QParty.party;
-        QCourse course = QCourse.course;
-
-        // Party 정보 가져오기
         Party result = queryFactory
             .selectFrom(party)
             .where(party.id.eq(id))
@@ -72,7 +60,6 @@ public class PartyRepositoryCustomImpl implements PartyRepositoryCustom {
             return Optional.empty();
         }
 
-        // Course 정보 가져오기
         List<CourseDto> courses = queryFactory
             .select(Projections.constructor(CourseDto.class,
                 course.address,
@@ -83,7 +70,6 @@ public class PartyRepositoryCustomImpl implements PartyRepositoryCustom {
             .where(course.party.id.eq(result.getId()))
             .fetch();
 
-        // PartyDetailDto 생성
         PartyDetailDto partyDetailDto = PartyDetailDto.builder()
             .id(result.getId())
             .title(result.getTitle())
@@ -95,12 +81,11 @@ public class PartyRepositoryCustomImpl implements PartyRepositoryCustom {
             .courses(courses)
             .build();
 
-        return Optional.ofNullable(partyDetailDto);
+        return Optional.of(partyDetailDto);
     }
 
     @Override
     public List<PartyMyDto> getMyParty(Long id) {
-        QParty party = QParty.party;
         return queryFactory
             .select(Projections.constructor(PartyMyDto.class,
                 party.id,
@@ -113,4 +98,15 @@ public class PartyRepositoryCustomImpl implements PartyRepositoryCustom {
             .fetch();
     }
 
+    private BooleanBuilder createMainPartyConditions(PartyType partyType) {
+        BooleanBuilder builder = new BooleanBuilder();
+        builder.and(party.endTime.goe(LocalDateTime.now())); // 현재 시간 이후의 파티만 조회
+        builder.and(party.isClosed.isFalse()); // 종료되지 않은 파티만 조회
+
+        if (partyType != null) {
+            builder.and(party.partyType.eq(partyType)); // 파티 타입 조건 추가
+        }
+
+        return builder;
+    }
 }

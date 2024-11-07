@@ -34,10 +34,11 @@ public class AlarmRepositoryCustomImpl implements AlarmRepositoryCustom{
                 party.title
             ))
             .from(alarm)
-            .leftJoin(sender).on(alarm.sender.eq(sender.id)) // 발신자 정보
-            .leftJoin(alarmDetail).on(alarmDetail.alarm.eq(alarm)) // 알람 세부 정보
-            .leftJoin(party).on(alarmDetail.party.eq(party)) // 파티 정보
+            .join(sender).on(alarm.sender.eq(sender.id)) // 발신자 정보 (INNER JOIN)
+            .join(alarmDetail).on(alarmDetail.alarm.eq(alarm)) // 알람 세부 정보 (INNER JOIN)
+            .join(party).on(alarmDetail.party.eq(party)) // 파티 정보 (INNER JOIN)
             .where(alarm.receiver.eq(receiverId)) // 리시버 ID로 필터링
             .fetch();
     }
+
 }

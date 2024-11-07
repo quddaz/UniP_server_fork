@@ -28,25 +28,8 @@ public class RefreshService {
     private final RefreshRepository refreshRepository; // RedisRepository 사용
     private final JwtTokenProvider jwtTokenProvider;
 
-    // Refresh 객체를 Redis에 추가
-    @Transactional
-    public void addRefresh(Long id, String token) {
-        refreshRepository.deleteById(id);
-        Refresh refresh = Refresh.builder()
-            .id(id)
-            .token(token)
-            .build();
-        refreshRepository.save(refresh);
-    }
-    // 모든 Refresh 객체 조회
-    public List<Refresh> get() {
-        List<Refresh> refreshList = new ArrayList<>();
-        refreshRepository.findAll().forEach(refreshList::add); // 모든 Refresh 객체 추가
-        return refreshList;
-    }
-
-    @Transactional
-    public Map<String, String> refreshAccessToken(String refreshToken) throws IOException {
+    // Refresh Token 신규 발급
+    public Map<String, String> refreshAccessToken(String refreshToken) {
 
         // 토큰 유효성 검사
         jwtTokenProvider.validateToken(refreshToken);
@@ -69,6 +52,25 @@ public class RefreshService {
 
         return ResponseUtil.createTokenMap(newAccess, newRefresh, member.isAuth());
     }
+    // Refresh 객체를 Redis에 추가
+    @Transactional
+    public void addRefresh(Long id, String token) {
+        deleteById(id);
+        Refresh refresh = Refresh.builder()
+            .id(id)
+            .token(token)
+            .build();
+        refreshRepository.save(refresh);
+    }
+    // 모든 Refresh 객체 조회
+    public List<Refresh> get() {
+        List<Refresh> refreshList = new ArrayList<>();
+        refreshRepository.findAll().forEach(refreshList::add); // 모든 Refresh 객체 추가
+        return refreshList;
+    }
 
-
+    @Transactional
+    public void deleteById(Long memberId) {
+        refreshRepository.deleteById(memberId);
+    }
 }
