@@ -7,7 +7,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
+import unip.universityInParty.domain.universityVerification.entity.EmailBlackList;
 import unip.universityInParty.domain.universityVerification.entity.UniversityVerification;
+import unip.universityInParty.domain.universityVerification.repository.EmailBlackListRepository;
 import unip.universityInParty.domain.universityVerification.repository.UniversityVerificationRepository;
 import unip.universityInParty.domain.member.entity.Member;
 import unip.universityInParty.domain.member.repository.MemberRepository;
@@ -26,6 +28,7 @@ public class UniversityVerificationService {
     private String serviceName;
 
     private final MemberRepository memberRepository;
+    private final EmailBlackListRepository emailBlackListRepository;
 
     // 6자리 난수 생성
     private String makeRandomNum() {
@@ -58,6 +61,9 @@ public class UniversityVerificationService {
 
     /* 이메일 작성 및 인증 코드 저장 */
     public void sendVerificationEmail(String email) {
+        if(emailBlackListRepository.existsByEmail(email)){
+            throw new CustomException(MailErrorCode.ALREADY_EMAIL);
+        }
         String authNumber = makeRandomNum(); // 난수 생성
         String title = "회원 가입을 위한 이메일입니다!";
         String content = "이메일을 인증하기 위한 절차입니다." +
@@ -88,6 +94,10 @@ public class UniversityVerificationService {
                 .orElseThrow(() -> new CustomException(MemberErrorCode.MEMBER_NOT_FOUND));
             member.setAuth(true);
             memberRepository.save(member);
+
+            EmailBlackList emailBlackList = EmailBlackList.builder()
+                .email(email).build();
+            emailBlackListRepository.save(emailBlackList);
         } else {
             throw new CustomException(MemberErrorCode.INVALID_AUTH_CODE);
         }
