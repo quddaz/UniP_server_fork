@@ -12,10 +12,8 @@ public record PartyResponseDto(
     Long partyId,
     @Schema(description = "파티장의 이름", example = "홍길동")
     String name,
-
     @Schema(description = "파티장의 프로필 이미지 URL", example = "http://example.com/profile.jpg")
     String profile_image,
-
     @Schema(description = "파티 제목", example = "여름 바비큐 파티")
     String title,
     @Schema(description = "파티 타입", example = "RESTAURANT,BAR,COMPREHENSIVE")
