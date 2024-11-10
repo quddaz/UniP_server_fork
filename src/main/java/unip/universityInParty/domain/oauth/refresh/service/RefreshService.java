@@ -1,7 +1,5 @@
 package unip.universityInParty.domain.oauth.refresh.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -12,11 +10,9 @@ import unip.universityInParty.domain.oauth.utils.ResponseUtil;
 import unip.universityInParty.domain.oauth.utils.jwt.JwtTokenProvider;
 import unip.universityInParty.domain.member.entity.Member;
 import unip.universityInParty.global.exception.custom.CustomException;
-import unip.universityInParty.global.exception.errorCode.OAuthErrorCode;
+import unip.universityInParty.domain.oauth.exception.OAuthErrorCode;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 

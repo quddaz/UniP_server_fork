@@ -3,7 +3,6 @@ package unip.universityInParty.global.exception.errorCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import unip.universityInParty.global.exception.errorCode.base.ErrorCode;
 
 @Getter
 @RequiredArgsConstructor

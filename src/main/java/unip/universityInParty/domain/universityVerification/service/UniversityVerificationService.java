@@ -14,8 +14,8 @@ import unip.universityInParty.domain.universityVerification.repository.Universit
 import unip.universityInParty.domain.member.entity.Member;
 import unip.universityInParty.domain.member.repository.MemberRepository;
 import unip.universityInParty.global.exception.custom.CustomException;
-import unip.universityInParty.global.exception.errorCode.MailErrorCode;
-import unip.universityInParty.global.exception.errorCode.MemberErrorCode;
+import unip.universityInParty.domain.universityVerification.exception.MailErrorCode;
+import unip.universityInParty.domain.member.exception.MemberErrorCode;
 import java.util.Random;
 @Service
 @RequiredArgsConstructor

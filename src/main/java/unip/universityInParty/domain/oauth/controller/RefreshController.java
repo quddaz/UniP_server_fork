@@ -35,7 +35,7 @@ public class RefreshController {
     @Operation(summary = "로그아웃", description = "로그아웃을 위해 저장소의 Refresh Token 삭제")
     public ResponseEntity<?> logoutDeleteToken(@AuthenticationPrincipal AuthMember authMember) {
         refreshService.deleteById(authMember.getId());
-        return ResponseEntity.ok(ResponseDto.of("로그아웃 성공",null));
+        return ResponseEntity.ok().body(ResponseDto.ok());
     }
     @GetMapping("/refresh")
     @Operation(summary = "테스트용 토큰 검색", description = "모든 토큰을 꺼내옴")

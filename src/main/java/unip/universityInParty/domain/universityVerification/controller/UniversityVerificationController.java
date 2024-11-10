@@ -26,10 +26,7 @@ public class UniversityVerificationController {
     @PostMapping()
     public ResponseEntity<?> createVerification(@RequestBody @Valid UvRequestDTO uvRequestDTO) {
         universityVerificationService.sendVerificationEmail(uvRequestDTO.email());
-        return ResponseEntity.ok().body(ResponseDto.of(
-            "인증 코드 생성 성공",
-            null
-        ));
+        return ResponseEntity.ok().body(ResponseDto.ok());
     }
 
 
@@ -38,9 +35,6 @@ public class UniversityVerificationController {
     public ResponseEntity<?> verification(@RequestBody @Valid UvValidRequestDTO uvValidRequestDTO,
                                           @AuthenticationPrincipal AuthMember authMember) {
         universityVerificationService.verifyAuthCode(uvValidRequestDTO.email(), uvValidRequestDTO.authCode(), authMember.getId());
-        return ResponseEntity.ok().body(ResponseDto.of(
-            "인증 성공",
-            null
-        ));
+        return ResponseEntity.ok().body(ResponseDto.ok());
     }
 }

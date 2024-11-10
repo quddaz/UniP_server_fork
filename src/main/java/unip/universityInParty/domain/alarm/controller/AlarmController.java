@@ -33,7 +33,7 @@ public class AlarmController {
         @RequestBody AlarmFriendRequestDTO alarmFriendRequestDTO,
         @AuthenticationPrincipal AuthMember authMember) {
         alarmService.sendFriendRequestAlarm(alarmFriendRequestDTO.receiver(), authMember.getId());
-        return ResponseEntity.ok().body(ResponseDto.of("친구 알람 생성 성공", null));
+        return ResponseEntity.ok().body(ResponseDto.ok());
     }
 
     @PostMapping("/invitation")
@@ -42,7 +42,7 @@ public class AlarmController {
         @RequestBody AlarmInvitationRequestDTO alarmInvitationRequestDTO,
         @AuthenticationPrincipal AuthMember authMember) {
         alarmService.sendInvitationAlarm(alarmInvitationRequestDTO.receiver(), authMember.getId(), alarmInvitationRequestDTO.party());
-        return ResponseEntity.ok().body(ResponseDto.of("초대 알람 생성 성공", null));
+        return ResponseEntity.ok().body(ResponseDto.ok());
     }
 
     @GetMapping
@@ -59,13 +59,13 @@ public class AlarmController {
     @Operation(summary = "알람 수락", description = "주어진 알람 요청을 수락합니다.")
     public ResponseEntity<?> okRequest(@RequestBody AlarmRequestDTO alarmRequestDTO) {
         alarmService.processAlarmRequest(alarmRequestDTO.id());
-        return ResponseEntity.ok().body(ResponseDto.of("알람 수락 성공", null));
+        return ResponseEntity.ok().body(ResponseDto.ok());
     }
 
     @PostMapping("/no")
     @Operation(summary = "알람 거절", description = "주어진 알람 요청을 거절합니다.")
     public ResponseEntity<?> noRequest(@RequestBody AlarmRequestDTO alarmRequestDTO) {
         alarmService.processNoAlarmRequest(alarmRequestDTO.id());
-        return ResponseEntity.ok().body(ResponseDto.of("알람 거절 성공", null));
+        return ResponseEntity.ok().body(ResponseDto.ok());
     }
 }

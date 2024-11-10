@@ -63,7 +63,7 @@ public class PartyController {
     public ResponseEntity<?> deleteParty(@PathVariable Long id,
                                          @AuthenticationPrincipal AuthMember authMember) {
         partyService.delete(id, authMember.getId());
-        return ResponseEntity.ok().body(ResponseDto.of("파티 제거 성공", null));
+        return ResponseEntity.ok().body(ResponseDto.ok());
     }
 
     @PutMapping("/{id}")
@@ -72,7 +72,7 @@ public class PartyController {
                                          @Valid @RequestBody PartyDto partyDto,
                                          @AuthenticationPrincipal AuthMember authMember) {
         partyService.update(id, partyDto, authMember.getId(), partyDto.courses());
-        return ResponseEntity.ok().body(ResponseDto.of("파티 업데이트 성공", null));
+        return ResponseEntity.ok().body(ResponseDto.ok());
     }
 
     @GetMapping

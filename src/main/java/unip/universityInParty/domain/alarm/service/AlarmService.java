@@ -15,8 +15,8 @@ import unip.universityInParty.domain.party.service.PartyService;
 import unip.universityInParty.domain.pmList.entity.Enum.PartyRole;
 import unip.universityInParty.domain.pmList.service.PMListService;
 import unip.universityInParty.global.exception.custom.CustomException;
-import unip.universityInParty.global.exception.errorCode.AlarmErrorCode;
-import unip.universityInParty.global.exception.errorCode.PartyErrorCode;
+import unip.universityInParty.domain.alarm.exception.AlarmErrorCode;
+import unip.universityInParty.domain.party.exception.PartyErrorCode;
 
 import java.util.List;
 

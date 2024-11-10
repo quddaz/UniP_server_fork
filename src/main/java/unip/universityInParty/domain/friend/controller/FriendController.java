@@ -30,7 +30,7 @@ public class FriendController {
         @RequestBody Long fromMemberId,
         @AuthenticationPrincipal AuthMember authMember) {
         friendService.acceptRequest(fromMemberId, authMember.getId());
-        return ResponseEntity.ok().body(ResponseDto.of("친구 추가 성공", null));
+        return ResponseEntity.ok().body(ResponseDto.ok());
     }
 
     @DeleteMapping
@@ -39,7 +39,7 @@ public class FriendController {
         @RequestBody Long fromMemberId,
         @AuthenticationPrincipal AuthMember authMember) {
         friendService.deleteRequest(fromMemberId, authMember.getId());
-        return ResponseEntity.ok().body(ResponseDto.of("친구 삭제 성공", null));
+        return ResponseEntity.ok().body(ResponseDto.ok());
     }
 
     @GetMapping

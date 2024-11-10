@@ -1,9 +1,9 @@
-package unip.universityInParty.global.exception.errorCode;
+package unip.universityInParty.domain.universityVerification.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
-import unip.universityInParty.global.exception.errorCode.base.ErrorCode;
+import unip.universityInParty.global.exception.errorCode.ErrorCode;
 
 @AllArgsConstructor
 @Getter
