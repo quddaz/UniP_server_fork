@@ -72,6 +72,8 @@ dependencies {
 	implementation 'com.fasterxml.jackson.core:jackson-databind'
 	// OpenFeign
 	implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+	//aws s3
+	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
 }
 
 tasks.named('test') {

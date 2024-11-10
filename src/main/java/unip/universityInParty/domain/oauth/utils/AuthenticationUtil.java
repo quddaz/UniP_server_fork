@@ -21,6 +21,8 @@ public class AuthenticationUtil {
             .id(member.getId())
             .name(member.getName())
             .username(member.getUsername())
+            .status(member.getStatus())
+            .profile_image(member.getProfile_image())
             .roles(Collections.singletonList(member.getRoleKey()))
             .build();
 
