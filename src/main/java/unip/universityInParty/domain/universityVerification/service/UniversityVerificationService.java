@@ -39,42 +39,40 @@ public class UniversityVerificationService {
         if(emailBlackListRepository.existsByEmail(email)){
             throw new CustomException(MailErrorCode.ALREADY_EMAIL);
         }
-        String authNumber = makeRandomNum(); // 난수 생성
-        String subject = "UniP 대학교 인증입니다.";
-        String content = "이메일을 인증하기 위한 절차입니다." +
-            "<br><br>" +
-            "인증 번호는 " + authNumber + "입니다." +
-            "<br>" +
-            "회원 가입 폼에 해당 번호를 입력해주세요.";
-        emailSender.sendEmail(email, subject, content);
+        //Redis에서 기존 인증 코드 삭제
+        universityVerificationRepository.deleteByEmail(email);
 
-        // Redis에 인증 코드 저장
-        UniversityVerification verification = UniversityVerification.builder()
+        String authNumber = makeRandomNum(); // 난수 생성
+
+        emailSender.sendEmail(email, authNumber);
+
+        UniversityVerification universityVerification = UniversityVerification.builder()
             .email(email)
             .authCode(authNumber)
-            .expiration(180L)
             .build();
-        universityVerificationRepository.save(verification); // Redis에 저장
+        universityVerificationRepository.save(universityVerification); // Redis에 저장
     }
 
 
     /* 인증 코드 검증 메서드 */
-    public void verifyAuthCode(String email, String code, Long id) {
+    public void verifyAuthCode(String email, String code, Long memberId) {
+        // 이메일로 인증 정보 조회
         UniversityVerification verification = universityVerificationRepository.findByEmail(email)
             .orElseThrow(() -> new CustomException(MemberErrorCode.UNIVERSITY_VERIFICATION_NOT_FOUND));
 
-        if (verification.getAuthCode().equals(code)) {
-            Member member = memberRepository.findById(id)
-                .orElseThrow(() -> new CustomException(MemberErrorCode.MEMBER_NOT_FOUND));
-            member.setAuth(true);
-            memberRepository.save(member);
-
-            EmailBlackList emailBlackList = EmailBlackList.builder()
-                .email(email).build();
-            emailBlackListRepository.save(emailBlackList);
-        } else {
+        // 인증 코드가 일치하는지 확인
+        if (!verification.getAuthCode().equals(code)) {
             throw new CustomException(MemberErrorCode.INVALID_AUTH_CODE);
         }
+
+        // 회원 정보 조회 및 인증 처리
+        Member member = memberRepository.findById(memberId)
+            .orElseThrow(() -> new CustomException(MemberErrorCode.MEMBER_NOT_FOUND));
+        member.setAuth(true);
+        memberRepository.save(member);
+
+        // 이메일을 블랙리스트에 추가
+        emailBlackListRepository.save(new EmailBlackList(email));
     }
 }
 

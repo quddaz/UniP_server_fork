@@ -11,16 +11,14 @@ import org.springframework.data.redis.core.index.Indexed;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@RedisHash(value = "universityVerification")
+@RedisHash(value = "universityVerification", timeToLive = 180)
 public class UniversityVerification {
     @Id
     private Long id;
-
     @Indexed
     private String email;
 
     private String authCode;
 
-    @TimeToLive
-    private long expiration;
+
 }
