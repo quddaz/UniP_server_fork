@@ -10,8 +10,8 @@ import org.springframework.stereotype.Component;
 import unip.universityInParty.domain.member.entity.Member;
 import unip.universityInParty.domain.member.repository.MemberRepository;
 import unip.universityInParty.global.exception.custom.CustomException;
-import unip.universityInParty.global.exception.errorCode.MemberErrorCode;
-import unip.universityInParty.global.exception.errorCode.OAuthErrorCode;
+import unip.universityInParty.domain.member.exception.MemberErrorCode;
+import unip.universityInParty.domain.oauth.exception.OAuthErrorCode;
 
 import java.security.Key;
 import java.util.Date;

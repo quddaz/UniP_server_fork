@@ -1,10 +1,10 @@
-package unip.universityInParty.global.exception.errorCode;
+package unip.universityInParty.domain.alarm.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.http.HttpStatus;
-import unip.universityInParty.global.exception.errorCode.base.ErrorCode;
+import unip.universityInParty.global.exception.errorCode.ErrorCode;
 
 @Getter
 @AllArgsConstructor

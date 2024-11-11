@@ -7,7 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 import unip.universityInParty.domain.member.entity.Member;
 import unip.universityInParty.domain.member.repository.MemberRepository;
 import unip.universityInParty.global.exception.custom.CustomException;
-import unip.universityInParty.global.exception.errorCode.MemberErrorCode;
+import unip.universityInParty.domain.member.exception.MemberErrorCode;
 import unip.universityInParty.global.service.AWSStorageService;
 
 @Service

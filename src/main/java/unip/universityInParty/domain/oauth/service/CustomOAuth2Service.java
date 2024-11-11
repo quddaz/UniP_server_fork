@@ -16,7 +16,7 @@ import unip.universityInParty.domain.member.entity.Enum.Status;
 import unip.universityInParty.domain.member.entity.Member;
 import unip.universityInParty.domain.member.repository.MemberRepository;
 import unip.universityInParty.global.exception.custom.CustomException;
-import unip.universityInParty.global.exception.errorCode.OAuthErrorCode;
+import unip.universityInParty.domain.oauth.exception.OAuthErrorCode;
 
 import java.util.List;
 import java.util.Map;

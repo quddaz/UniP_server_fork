@@ -9,7 +9,7 @@ import unip.universityInParty.global.exception.custom.CustomException;
 
 
 import java.time.LocalDateTime;
-import unip.universityInParty.global.exception.errorCode.PartyErrorCode;
+import unip.universityInParty.domain.party.exception.PartyErrorCode;
 @Getter
 @Setter
 @Entity

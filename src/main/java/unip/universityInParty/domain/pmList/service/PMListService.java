@@ -12,8 +12,8 @@ import unip.universityInParty.domain.pmList.entity.Enum.PartyRole;
 import unip.universityInParty.domain.pmList.entity.PMList;
 import unip.universityInParty.domain.pmList.repository.PMListRepository;
 import unip.universityInParty.global.exception.custom.CustomException;
-import unip.universityInParty.global.exception.errorCode.MemberErrorCode;
-import unip.universityInParty.global.exception.errorCode.PartyErrorCode;
+import unip.universityInParty.domain.member.exception.MemberErrorCode;
+import unip.universityInParty.domain.party.exception.PartyErrorCode;
 
 import java.util.List;
 @Service

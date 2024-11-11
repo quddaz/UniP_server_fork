@@ -16,8 +16,8 @@ import unip.universityInParty.domain.party.entity.Party;
 import unip.universityInParty.domain.party.entity.type.PartyType;
 import unip.universityInParty.domain.party.repository.PartyRepository;
 import unip.universityInParty.global.exception.custom.CustomException;
-import unip.universityInParty.global.exception.errorCode.MemberErrorCode;
-import unip.universityInParty.global.exception.errorCode.PartyErrorCode;
+import unip.universityInParty.domain.member.exception.MemberErrorCode;
+import unip.universityInParty.domain.party.exception.PartyErrorCode;
 
 import java.util.List;
 @Service

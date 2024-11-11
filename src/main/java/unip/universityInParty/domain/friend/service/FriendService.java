@@ -10,8 +10,8 @@ import unip.universityInParty.domain.friend.repository.FriendRepository;
 import unip.universityInParty.domain.member.entity.Member;
 import unip.universityInParty.domain.member.repository.MemberRepository;
 import unip.universityInParty.global.exception.custom.CustomException;
-import unip.universityInParty.global.exception.errorCode.FriendErrorCode;
-import unip.universityInParty.global.exception.errorCode.MemberErrorCode;
+import unip.universityInParty.domain.friend.exception.FriendErrorCode;
+import unip.universityInParty.domain.member.exception.MemberErrorCode;
 
 import java.util.List;
 
