@@ -85,7 +85,8 @@ public class JwtTokenProvider {
                 .parseClaimsJws(token);
             return claims.getBody().getExpiration().after(new Date());
         } catch (Exception e) {
-            throw new CustomException(OAuthErrorCode.TOKEN_VALID_FAIL);
+            log.error("Token validation error: ", e);
+            return false;
         }
     }
 

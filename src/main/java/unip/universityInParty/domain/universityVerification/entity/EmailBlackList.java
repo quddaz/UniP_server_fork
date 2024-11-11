@@ -17,4 +17,8 @@ public class EmailBlackList {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String email;
+
+    public EmailBlackList(String email) {
+        this.email = email;
+    }
 }
