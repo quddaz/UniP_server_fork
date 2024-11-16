@@ -45,6 +45,10 @@ public class PartyService {
     public List<PartyResponseDto> getPartyMainPage(PartyType partyType){
         return partyRepository.getMainPartyPage(partyType);
     }
+
+    public List<PartyResponseDto> getPartyPage(PartyType partyType, int pageNo, int lastId) {
+        return partyRepository.getPartyPage(partyType, (long) pageNo, lastId);
+    }
     // 자신의 파티를 조회합니다.
     public List<PartyMyDto> getMyParty(Long id){
         return partyRepository.getMyParty(id);
@@ -107,4 +111,6 @@ public class PartyService {
         }
         return party;
     }
+
+
 }

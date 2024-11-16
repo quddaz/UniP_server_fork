@@ -38,6 +38,7 @@ public class Member {
     private Status status;
 
 
+
     public void plusPoint(int point){
         this.point += point;
     }
