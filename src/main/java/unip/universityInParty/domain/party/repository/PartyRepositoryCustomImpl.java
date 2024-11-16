@@ -98,6 +98,38 @@ public class PartyRepositoryCustomImpl implements PartyRepositoryCustom {
             .fetch();
     }
 
+
+    @Override
+    public List<PartyResponseDto> getPartyPage(PartyType partyType, Long lastId, int size) {
+        BooleanBuilder conditions = createMainPartyConditions(partyType);
+
+        if (lastId != null) {
+            conditions.and(party.id.gt(lastId));
+        } else {
+            conditions.and(party.id.gt(0));
+        }
+
+        return queryFactory
+            .select(Projections.constructor(PartyResponseDto.class,
+                party.id,
+                member.name,
+                member.profile_image,
+                party.title,
+                party.partyType,
+                party.partyLimit,
+                party.peopleCount,
+                party.startTime,
+                party.endTime
+            ))
+            .from(party)
+            .join(party.member, member)
+            .where(conditions)
+            .orderBy(party.id.asc())
+            .limit(size)
+            .fetch();
+    }
+
+
     private BooleanBuilder createMainPartyConditions(PartyType partyType) {
         BooleanBuilder builder = new BooleanBuilder();
         builder.and(party.endTime.goe(LocalDateTime.now())); // 현재 시간 이후의 파티만 조회

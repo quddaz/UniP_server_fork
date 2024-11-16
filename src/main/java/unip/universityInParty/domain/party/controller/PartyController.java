@@ -83,6 +83,13 @@ public class PartyController {
         return ResponseEntity.ok().body(ResponseDto.of("파티 전체 조회 성공", parties));
     }
 
+    @GetMapping("/nooffset")
+    @Operation(summary = "파티 전체 성능 개선 페이징 조회", description = "파티 전체 정보를 조회합니다.")
+    public ResponseEntity<?> getPartyPage2(@RequestParam(required = false) PartyType partyType, @RequestParam(required = false) int lastId ) {
+        List<PartyResponseDto> parties = partyService.getPartyPage(partyType, lastId,5);
+        return ResponseEntity.ok().body(ResponseDto.of("파티 전체 조회 성공", parties));
+    }
+
     @GetMapping("/my")
     @Operation(summary = "자신의 파티 조회", description = "친구를 파티 초대하기 위한 API")
     @ApiResponse(responseCode = "200", description = "파티 조회 성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = PartyMyDto.class)))

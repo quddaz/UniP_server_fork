@@ -16,6 +16,11 @@ import unip.universityInParty.domain.party.exception.PartyErrorCode;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Table(
+    indexes = {
+        @Index(name = "idx_party_category_status", columnList = "partyType, isClosed")
+    }
+)
 public class Party {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
