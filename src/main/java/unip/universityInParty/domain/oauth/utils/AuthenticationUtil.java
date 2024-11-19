@@ -17,14 +17,7 @@ public class AuthenticationUtil {
 
     public static void makeAuthentication(Member member) {
         // Authentication 정보 만들기
-        AuthMember authUser = AuthMember.builder()
-            .id(member.getId())
-            .name(member.getName())
-            .username(member.getUsername())
-            .status(member.getStatus())
-            .profile_image(member.getProfile_image())
-            .roles(Collections.singletonList(member.getRoleKey()))
-            .build();
+        AuthMember authUser = AuthMember.createMember(member);
 
         // ContextHolder 에 Authentication 정보 저장
         Authentication auth = AuthenticationUtil.getAuthentication(authUser);

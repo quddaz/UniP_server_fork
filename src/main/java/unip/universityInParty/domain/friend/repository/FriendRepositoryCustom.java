@@ -6,5 +6,6 @@ import java.util.List;
 
 public interface FriendRepositoryCustom {
     List<FriendDTO> getMyFriend(Long id);
+
     List<FriendDTO> getBoredFriend(Long id);
 }

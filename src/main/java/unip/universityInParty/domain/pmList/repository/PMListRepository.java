@@ -14,6 +14,7 @@ import java.util.List;
 public interface PMListRepository extends JpaRepository<PMList, Long> {
     @Query("SELECT pm.member.id FROM PMList pm WHERE pm.party.id = :partyId")
     List<Long> findMemberIdsByPartyId(@Param("partyId") Long partyId);
+
     void deleteByPartyAndMember(Party party, Member member);
 
     boolean existsByPartyAndMember(Party party, Member member);

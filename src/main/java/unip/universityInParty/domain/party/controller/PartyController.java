@@ -85,8 +85,8 @@ public class PartyController {
 
     @GetMapping("/nooffset")
     @Operation(summary = "파티 전체 성능 개선 페이징 조회", description = "파티 전체 정보를 조회합니다.")
-    public ResponseEntity<?> getPartyPage2(@RequestParam(required = false) PartyType partyType, @RequestParam(required = false) int lastId ) {
-        List<PartyResponseDto> parties = partyService.getPartyPage(partyType, lastId,5);
+    public ResponseEntity<?> getPartyPage2(@RequestParam(required = false) PartyType partyType, @RequestParam(required = false) int lastId) {
+        List<PartyResponseDto> parties = partyService.getPartyPage(partyType, lastId, 5);
         return ResponseEntity.ok().body(ResponseDto.of("파티 전체 조회 성공", parties));
     }
 
@@ -101,15 +101,15 @@ public class PartyController {
     @PostMapping(value = "/gpt")
     @Operation(summary = "gpt 응답 생성", description = "주어진 질문 기반 gpt 응답 생성")
     @ApiResponse(responseCode = "200", description = "응답 생성 성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = PartyGptDto.class)))
-    public ResponseEntity<?> getGpt(@RequestBody PartyGptPrompt prompt){
-        return ResponseEntity.ok().body(ResponseDto.of("gpt 루트 생성 성공",chatGptService.getChatResponse(prompt.prompt())));
+    public ResponseEntity<?> getGpt(@RequestBody PartyGptPrompt prompt) {
+        return ResponseEntity.ok().body(ResponseDto.of("gpt 루트 생성 성공", chatGptService.getChatResponse(prompt.prompt())));
     }
 
     @PostMapping(value = "/gpt/create")
     @Operation(summary = "gpt 기반 파티 생성", description = "gpt 응답으로 파티를 생성")
     @ApiResponse(responseCode = "200", description = "gpt 기반 파티 생성", content = @Content(mediaType = "application/json", schema = @Schema(implementation = PartyGptDto.class)))
     public ResponseEntity<?> createGpt(@RequestBody PartyGptDto partyGptDto,
-                                       @AuthenticationPrincipal AuthMember authMember){
+                                       @AuthenticationPrincipal AuthMember authMember) {
         Party party = partyService.create(PartyDto.toPartyDto(partyGptDto), authMember.getId());
         pmListService.createJoinParty(PartyRole.MASTER, authMember.getId(), party.getId());
         return ResponseEntity.ok().body(ResponseDto.of("gpt 기반 파티 생성 성공", party.getId()));

@@ -11,14 +11,13 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Builder
-public record PartyGptDto (    String title,
-                               String content,
-                               int limit,
-                               LocalDateTime startTime,
-                               LocalDateTime endTime,
+public record PartyGptDto(String title,
+                          String content,
+                          int limit,
+                          LocalDateTime startTime,
+                          LocalDateTime endTime,
 
-                            List<CourseGptDto> courses,
-                            @JsonProperty("route summary")
-                            String routeSummary)
-{
+                          List<CourseGptDto> courses,
+                          @JsonProperty("route summary")
+                          String routeSummary) {
 }

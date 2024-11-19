@@ -35,6 +35,7 @@ public class JwtTokenProvider {
         byte[] keyBytes = Decoders.BASE64.decode(jwtProperties.secretKey());
         this.key = Keys.hmacShaKeyFor(keyBytes);
     }
+
     /**
      * AccessToken 생성 메소드
      */
@@ -54,6 +55,7 @@ public class JwtTokenProvider {
             .signWith(key, SignatureAlgorithm.HS512)
             .compact();
     }
+
     /**
      * RefreshToken 생성
      */
@@ -64,7 +66,7 @@ public class JwtTokenProvider {
         Date refreshValidity = new Date(now + jwtProperties.refreshTokenExpiration());
 
         // Refresh token 생성
-        return  Jwts.builder()
+        return Jwts.builder()
             .setIssuedAt(new Date(now))
             .setExpiration(refreshValidity)
             .setIssuer(jwtProperties.issuer())

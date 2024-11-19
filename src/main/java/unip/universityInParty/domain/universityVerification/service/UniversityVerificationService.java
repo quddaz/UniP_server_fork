@@ -13,6 +13,7 @@ import unip.universityInParty.domain.universityVerification.utils.EmailSender;
 import unip.universityInParty.global.exception.custom.CustomException;
 import unip.universityInParty.domain.universityVerification.exception.MailErrorCode;
 import unip.universityInParty.domain.member.exception.MemberErrorCode;
+
 import java.util.Random;
 
 @Service
@@ -36,7 +37,7 @@ public class UniversityVerificationService {
 
     /* 이메일 작성 및 인증 코드 저장 */
     public void sendVerificationEmail(String email) {
-        if(emailBlackListRepository.existsByEmail(email)){
+        if (emailBlackListRepository.existsByEmail(email)) {
             throw new CustomException(MailErrorCode.ALREADY_EMAIL);
         }
         //Redis에서 기존 인증 코드 삭제

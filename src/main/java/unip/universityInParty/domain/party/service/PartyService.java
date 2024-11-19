@@ -31,8 +31,7 @@ public class PartyService {
 
     // 주어진 파티 ID에 대한 세부 정보를 조회합니다.
     public PartyDetailDto getPartyDetailById(Long id){
-        return partyRepository.findPartyDetailById(id)
-            .orElseThrow(() -> new CustomException(PartyErrorCode.PARTY_NOT_FOUND));
+        return partyRepository.findPartyDetailById(id);
     }
 
     // 주어진 파티 ID에 대한 파티 정보를 조회합니다.

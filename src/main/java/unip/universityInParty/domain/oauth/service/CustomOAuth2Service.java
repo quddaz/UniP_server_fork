@@ -18,6 +18,7 @@ import unip.universityInParty.domain.member.repository.MemberRepository;
 import unip.universityInParty.global.exception.custom.CustomException;
 import unip.universityInParty.domain.oauth.exception.OAuthErrorCode;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -38,15 +39,7 @@ public class CustomOAuth2Service extends DefaultOAuth2UserService {
         Member member = getOrGenerateMember(username,oAuth2Response);
 
         // AuthUser 생성 및 반환
-        return AuthMember.builder()
-            .id(member.getId())
-            .name(member.getName())
-            .username(username)
-            .auth(member.isAuth())
-            .status(member.getStatus())
-            .profile_image(member.getProfile_image())
-            .roles(List.of(member.getRole().name()))
-            .build();
+        return AuthMember.createMember(member, username);
     }
 
     private OAuth2Response getOAuth2Response(String registrationId, Map<String, Object> attributes) {
@@ -59,15 +52,6 @@ public class CustomOAuth2Service extends DefaultOAuth2UserService {
 
     private Member getOrGenerateMember(String username, OAuth2Response oAuth2Response) {
         return memberRepository.findByUsername(username)
-            .orElseGet(() -> memberRepository.save(Member.builder()
-                .username(username)
-                .name(oAuth2Response.getName())
-                .email(oAuth2Response.getEmail())
-                .profile_image(oAuth2Response.getProfileImage())
-                .role(Role.GUEST)
-                .point(0)
-                .auth(false)
-                .status(Status.BORED)
-                .build()));
+            .orElseGet(() -> memberRepository.save(Member.defaultCreateMember(oAuth2Response, username)));
     }
 }

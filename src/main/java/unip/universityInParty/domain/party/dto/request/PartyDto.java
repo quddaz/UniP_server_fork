@@ -3,8 +3,10 @@ package unip.universityInParty.domain.party.dto.request;
 import jakarta.validation.constraints.*;
 import lombok.Builder;
 import unip.universityInParty.domain.course.dto.CourseDto;
+
 import java.time.LocalDateTime;
 import java.util.List;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 import unip.universityInParty.domain.party.entity.type.PartyType;
 
@@ -38,7 +40,7 @@ public record PartyDto(
     @Schema(description = "코스 목록", implementation = CourseDto.class)
     List<CourseDto> courses
 ) {
-    public static PartyDto toPartyDto(PartyGptDto partyGptDto){
+    public static PartyDto toPartyDto(PartyGptDto partyGptDto) {
         List<CourseDto> courseDtoList = CourseDto.toCourseDto(partyGptDto.courses());
         return PartyDto.builder()
             .title(partyGptDto.title())

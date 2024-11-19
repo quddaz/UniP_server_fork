@@ -58,7 +58,7 @@ public class AlarmService {
         validateUniqueAlarm(receiverId, senderId, AlarmCategory.INVITATION);
         Party party = partyService.getPartyById(partyId);
 
-        if(party.isClosed()){
+        if (party.isClosed()) {
             throw new CustomException(PartyErrorCode.PARTY_CLOSED);
         }
 
@@ -89,8 +89,7 @@ public class AlarmService {
             .orElseThrow(() -> new CustomException(AlarmErrorCode.ALARM_NOT_FOUND));
         if (alarm.getAlarmCategory().equals(AlarmCategory.FRIEND_REQUEST)) {
             acceptFriendRequest(alarm);
-        }
-        else if(alarm.getAlarmCategory().equals(AlarmCategory.INVITATION)){
+        } else if (alarm.getAlarmCategory().equals(AlarmCategory.INVITATION)) {
             handleInvitationAlarm(alarm);
         }
     }

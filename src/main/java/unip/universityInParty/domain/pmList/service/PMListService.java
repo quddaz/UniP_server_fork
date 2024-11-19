@@ -16,6 +16,7 @@ import unip.universityInParty.domain.member.exception.MemberErrorCode;
 import unip.universityInParty.domain.party.exception.PartyErrorCode;
 
 import java.util.List;
+
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -37,7 +38,7 @@ public class PMListService {
 
     // 파티에 멤버를 추가하고, 멤버의 역할을 설정합니다.
     @Transactional
-    public void createJoinParty(PartyRole partyRole, Long memberId, Long partyId){
+    public void createJoinParty(PartyRole partyRole, Long memberId, Long partyId) {
         Party party = partyRepository.findById(partyId)
             .orElseThrow(() -> new CustomException(PartyErrorCode.PARTY_NOT_FOUND));
         Member member = memberRepository.findById(memberId)
@@ -56,7 +57,7 @@ public class PMListService {
 
     // 특정 멤버를 파티에서 삭제합니다.
     @Transactional
-    public void deletePartyMember(Long memberId, Long partyId){
+    public void deletePartyMember(Long memberId, Long partyId) {
         Party party = partyRepository.findById(partyId)
             .orElseThrow(() -> new CustomException(PartyErrorCode.PARTY_NOT_FOUND));
         Member member = memberRepository.findById(memberId)

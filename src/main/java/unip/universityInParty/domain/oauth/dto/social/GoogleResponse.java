@@ -1,7 +1,6 @@
 package unip.universityInParty.domain.oauth.dto.social;
 
 
-
 import java.util.Map;
 
 public record GoogleResponse(Map<String, Object> attribute) implements OAuth2Response {
