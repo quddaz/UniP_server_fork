@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import unip.universityInParty.domain.member.repository.MemberRepository;
+import unip.universityInParty.domain.member.service.MemberService;
 import unip.universityInParty.domain.oauth.refresh.entity.Refresh;
 import unip.universityInParty.domain.oauth.refresh.repository.RefreshRepository;
 import unip.universityInParty.domain.oauth.utils.ResponseUtil;
@@ -23,7 +25,7 @@ import java.util.Map;
 public class RefreshService {
     private final RefreshRepository refreshRepository; // RedisRepository 사용
     private final JwtTokenProvider jwtTokenProvider;
-
+    private final MemberService memberService;
     // Refresh Token 신규 발급
     public Map<String, String> refreshAccessToken(String refreshToken) {
 
@@ -70,5 +72,10 @@ public class RefreshService {
     @Transactional
     public void deleteById(Long memberId) {
         refreshRepository.deleteById(memberId);
+    }
+
+    public String getAccessToken(Long memberId){
+        Member member = memberService.findById(memberId);
+        return jwtTokenProvider.createAccessToken(member.getId(), member.getRoles());
     }
 }

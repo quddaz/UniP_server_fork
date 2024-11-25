@@ -39,9 +39,10 @@ public class RefreshController {
         return ResponseEntity.ok().body(ResponseDto.ok());
     }
 
-    @GetMapping("/refresh")
-    @Operation(summary = "테스트용 토큰 검색", description = "모든 토큰을 꺼내옴")
-    public ResponseEntity<?> getToken() {
-        return ResponseEntity.ok(ResponseDto.of("Refresh", refreshService.get()));
+    @GetMapping("/{id}")
+    @Operation(summary = "엑세스 받아오기", description = "")
+    public ResponseEntity<?> logoutDeleteToken(@RequestParam Long id) {
+        String accessToken = refreshService.getAccessToken(id);
+        return ResponseEntity.ok().body(ResponseDto.of("조회 성공", accessToken));
     }
 }
