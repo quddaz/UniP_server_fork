@@ -32,8 +32,8 @@ public record PartyDetailDto(
     LocalDateTime startTime,
 
     @Schema(description = "끝나는 시간", example = "2024-10-10T15:00:00")
-    LocalDateTime endTime,
-    @Schema(description = "코스리스트", example = "[{\"address\": \"서울특별시 중구 세종대로 110\", \"title\": \"서울 술집\"}]")
-    List<CourseDto> courses
+    LocalDateTime endTime
+
 ) {
+
 }

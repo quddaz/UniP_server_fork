@@ -17,6 +17,7 @@ import unip.universityInParty.domain.party.dto.request.PartyDto;
 import unip.universityInParty.domain.party.dto.request.PartyGptDto;
 import unip.universityInParty.domain.party.dto.request.PartyGptPrompt;
 import unip.universityInParty.domain.party.dto.response.PartyDetailDto;
+import unip.universityInParty.domain.party.dto.response.PartyDetailsResponseDto;
 import unip.universityInParty.domain.party.dto.response.PartyMyDto;
 import unip.universityInParty.domain.party.dto.response.PartyResponseDto;
 import unip.universityInParty.domain.party.entity.Party;
@@ -45,7 +46,7 @@ public class PartyController {
         @ApiResponse(responseCode = "200", description = "파티 상세 조회 성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = PartyDetailDto.class))),
     })
     public ResponseEntity<?> getPartyById(@PathVariable Long id) {
-        PartyDetailDto partyDetailDto = partyService.getPartyDetailById(id);
+        PartyDetailsResponseDto partyDetailDto = partyService.getPartyDetailById(id);
         return ResponseEntity.ok().body(ResponseDto.of("파티 상세 조회 성공", partyDetailDto));
     }
 
