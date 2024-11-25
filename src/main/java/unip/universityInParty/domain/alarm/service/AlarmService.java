@@ -115,7 +115,7 @@ public class AlarmService {
             .orElseThrow(() -> new CustomException(AlarmErrorCode.ALARM_NOT_FOUND));
 
         if (alarm.getAlarmCategory().equals(AlarmCategory.INVITATION)) {
-            handleInvitationAlarm(alarm);
+            deleteAlarmAndDetail(alarm);
         } else {
             alarmRepository.delete(alarm);
         }
