@@ -10,6 +10,7 @@ import unip.universityInParty.domain.member.entity.Member;
 import unip.universityInParty.domain.member.repository.MemberRepository;
 import unip.universityInParty.domain.party.dto.request.PartyDto;
 import unip.universityInParty.domain.party.dto.response.PartyDetailDto;
+import unip.universityInParty.domain.party.dto.response.PartyDetailsResponseDto;
 import unip.universityInParty.domain.party.dto.response.PartyMyDto;
 import unip.universityInParty.domain.party.dto.response.PartyResponseDto;
 import unip.universityInParty.domain.party.entity.Party;
@@ -30,7 +31,7 @@ public class PartyService {
     private final CourseService courseService;
 
     // 주어진 파티 ID에 대한 세부 정보를 조회합니다.
-    public PartyDetailDto getPartyDetailById(Long id){
+    public PartyDetailsResponseDto getPartyDetailById(Long id){
         return partyRepository.findPartyDetailById(id);
     }
 

@@ -7,12 +7,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import unip.universityInParty.domain.course.dto.CourseDto;
 import unip.universityInParty.domain.party.dto.response.PartyDetailDto;
+import unip.universityInParty.domain.party.dto.response.PartyDetailsResponseDto;
 import unip.universityInParty.domain.party.dto.response.PartyMyDto;
 import unip.universityInParty.domain.party.dto.response.PartyResponseDto;
 import unip.universityInParty.domain.party.entity.type.PartyType;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 import static unip.universityInParty.domain.course.entity.QCourse.course;
 import static unip.universityInParty.domain.member.entity.QMember.member;
@@ -47,8 +49,8 @@ public class PartyRepositoryCustomImpl implements PartyRepositoryCustom {
     }
 
     @Override
-    public PartyDetailDto findPartyDetailById(Long id) {
-        return queryFactory
+    public PartyDetailsResponseDto findPartyDetailById(Long id) {
+        PartyDetailDto partyDetailDto = queryFactory
             .select(Projections.constructor(PartyDetailDto.class,
                 party.id,
                 party.title,
@@ -56,20 +58,23 @@ public class PartyRepositoryCustomImpl implements PartyRepositoryCustom {
                 party.partyLimit,
                 party.peopleCount,
                 party.startTime,
-                party.endTime,
-                Projections.list(
-                    Projections.constructor(CourseDto.class,
-                        course.address,
-                        course.name,
-                        course.content
-                    )
-                )
+                party.endTime
             ))
             .from(party)
-            .leftJoin(course).on(course.party.id.eq(party.id))
             .where(party.id.eq(id))
             .fetchOne();
 
+        List<CourseDto> courses = queryFactory
+            .select(Projections.constructor(CourseDto.class,
+                course.address,
+                course.name,
+                course.content
+            ))
+            .from(course)
+            .where(course.party.id.eq(id))
+            .fetch();
+
+        return PartyDetailsResponseDto.createPartyDto(Objects.requireNonNull(partyDetailDto), courses);
     }
 
 
