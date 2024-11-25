@@ -19,8 +19,7 @@ public class MemberService {
 
     @Transactional
     public void setMemberProfileImage(MultipartFile multipartFile, long memberId) {
-        Member member = memberRepository.findById(memberId)
-            .orElseThrow(() -> new CustomException(MemberErrorCode.MEMBER_NOT_FOUND));
+        Member member = findById(memberId);
 
         //프로필 이미지 삭제 및 저장
         awsStorageService.deleteFile(member.getProfileImage());
@@ -33,10 +32,14 @@ public class MemberService {
 
     @Transactional
     public void setMemberName(String name, long memberId) {
-        Member member = memberRepository.findById(memberId)
-            .orElseThrow(() -> new CustomException(MemberErrorCode.MEMBER_NOT_FOUND));
+        Member member = findById(memberId);
         member.setName(name);
 
         memberRepository.save(member);
+    }
+
+    public Member findById(Long id){
+        return memberRepository.findById(id)
+            .orElseThrow(() -> new CustomException(MemberErrorCode.MEMBER_NOT_FOUND));
     }
 }
