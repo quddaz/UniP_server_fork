@@ -6,26 +6,23 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import unip.universityInParty.domain.course.dto.CourseDto;
-import unip.universityInParty.domain.course.entity.QCourse;
-import unip.universityInParty.domain.member.entity.QMember;
 import unip.universityInParty.domain.party.dto.response.PartyDetailDto;
 import unip.universityInParty.domain.party.dto.response.PartyMyDto;
 import unip.universityInParty.domain.party.dto.response.PartyResponseDto;
-import unip.universityInParty.domain.party.entity.Party;
-import unip.universityInParty.domain.party.entity.QParty;
 import unip.universityInParty.domain.party.entity.type.PartyType;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
+
+import static unip.universityInParty.domain.course.entity.QCourse.course;
+import static unip.universityInParty.domain.member.entity.QMember.member;
+import static unip.universityInParty.domain.party.entity.QParty.party;
+
 @Repository
 @RequiredArgsConstructor
 public class PartyRepositoryCustomImpl implements PartyRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
-    private final QParty party = QParty.party;
-    private final QMember member = QMember.member;
-    private final QCourse course = QCourse.course;
 
     @Override
     public List<PartyResponseDto> getMainPartyPage(PartyType partyType) {
@@ -35,7 +32,7 @@ public class PartyRepositoryCustomImpl implements PartyRepositoryCustom {
             .select(Projections.constructor(PartyResponseDto.class,
                 party.id,
                 member.name,
-                member.profile_image,
+                member.profileImage,
                 party.title,
                 party.partyType,
                 party.partyLimit,
@@ -50,39 +47,31 @@ public class PartyRepositoryCustomImpl implements PartyRepositoryCustom {
     }
 
     @Override
-    public Optional<PartyDetailDto> findPartyDetailById(Long id) {
-        Party result = queryFactory
-            .selectFrom(party)
+    public PartyDetailDto findPartyDetailById(Long id) {
+        return queryFactory
+            .select(Projections.constructor(PartyDetailDto.class,
+                party.id,
+                party.title,
+                party.content,
+                party.partyLimit,
+                party.peopleCount,
+                party.startTime,
+                party.endTime,
+                Projections.list(
+                    Projections.constructor(CourseDto.class,
+                        course.address,
+                        course.name,
+                        course.content
+                    )
+                )
+            ))
+            .from(party)
+            .leftJoin(course).on(course.party.id.eq(party.id))
             .where(party.id.eq(id))
             .fetchOne();
 
-        if (result == null) {
-            return Optional.empty();
-        }
-
-        List<CourseDto> courses = queryFactory
-            .select(Projections.constructor(CourseDto.class,
-                course.address,
-                course.name,
-                course.content
-            ))
-            .from(course)
-            .where(course.party.id.eq(result.getId()))
-            .fetch();
-
-        PartyDetailDto partyDetailDto = PartyDetailDto.builder()
-            .id(result.getId())
-            .title(result.getTitle())
-            .content(result.getContent())
-            .limit(result.getPartyLimit())
-            .peopleCount(result.getPeopleCount())
-            .startTime(result.getStartTime())
-            .endTime(result.getEndTime())
-            .courses(courses)
-            .build();
-
-        return Optional.of(partyDetailDto);
     }
+
 
     @Override
     public List<PartyMyDto> getMyParty(Long id) {
@@ -101,19 +90,11 @@ public class PartyRepositoryCustomImpl implements PartyRepositoryCustom {
 
     @Override
     public List<PartyResponseDto> getPartyPage(PartyType partyType, Long lastId, int size) {
-        BooleanBuilder conditions = createMainPartyConditions(partyType);
-
-        if (lastId != null) {
-            conditions.and(party.id.gt(lastId));
-        } else {
-            conditions.and(party.id.gt(0));
-        }
-
         return queryFactory
             .select(Projections.constructor(PartyResponseDto.class,
                 party.id,
                 member.name,
-                member.profile_image,
+                member.profileImage,
                 party.title,
                 party.partyType,
                 party.partyLimit,
@@ -123,7 +104,10 @@ public class PartyRepositoryCustomImpl implements PartyRepositoryCustom {
             ))
             .from(party)
             .join(party.member, member)
-            .where(conditions)
+            .where(
+                party.partyType.eq(partyType),
+                lastId != null ? party.id.gt(lastId) : party.id.gt(0)
+            )
             .orderBy(party.id.asc())
             .limit(size)
             .fetch();

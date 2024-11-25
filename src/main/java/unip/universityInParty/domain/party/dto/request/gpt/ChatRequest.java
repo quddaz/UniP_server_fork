@@ -1,6 +1,7 @@
 package unip.universityInParty.domain.party.dto.request.gpt;
 
 import lombok.Builder;
+
 @Builder
 public record ChatRequest(
     String model,
@@ -10,7 +11,7 @@ public record ChatRequest(
     public static ChatRequest.ChatRequestBuilder defaultGpt35Turbo(String prompt) {
         return ChatRequest.builder()
             .model("gpt-4o")
-            .messages(new Message[] {
+            .messages(new Message[]{
                 new Message("system", """
                     당신은 똑똑하고 유용한 여행 어시스턴트입니다. 사용자가 입력한 주소를 기반으로 인기 있는 술집, 커피숍, 음식점을 포함한 경로를 추천하는 역할을 수행합니다. 사용자가 주소를 제공하면 다음 단계를 따르세요:
 
@@ -44,7 +45,7 @@ public record ChatRequest(
                       ],
                       "route summary": "Content of the route summary."
                     }
-                    
+                                        
                     """),
                 new Message("user", prompt)
             });

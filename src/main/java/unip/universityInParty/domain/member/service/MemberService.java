@@ -16,21 +16,23 @@ import unip.universityInParty.global.service.AWSStorageService;
 public class MemberService {
     private final MemberRepository memberRepository;
     private final AWSStorageService awsStorageService;
+
     @Transactional
-    public void setMemberProfileImage(MultipartFile multipartFile, long memberId){
+    public void setMemberProfileImage(MultipartFile multipartFile, long memberId) {
         Member member = memberRepository.findById(memberId)
             .orElseThrow(() -> new CustomException(MemberErrorCode.MEMBER_NOT_FOUND));
 
         //프로필 이미지 삭제 및 저장
-        awsStorageService.deleteFile(member.getProfile_image());
+        awsStorageService.deleteFile(member.getProfileImage());
         String url = awsStorageService.uploadFile(multipartFile);
 
-        member.setProfile_image(url);
+        member.setProfileImage(url);
 
         memberRepository.save(member);
     }
+
     @Transactional
-    public void setMemberName(String name, long memberId){
+    public void setMemberName(String name, long memberId) {
         Member member = memberRepository.findById(memberId)
             .orElseThrow(() -> new CustomException(MemberErrorCode.MEMBER_NOT_FOUND));
         member.setName(name);

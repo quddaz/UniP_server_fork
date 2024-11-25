@@ -48,6 +48,7 @@ public class RefreshService {
 
         return ResponseUtil.createTokenMap(newAccess, newRefresh, member.isAuth());
     }
+
     // Refresh 객체를 Redis에 추가
     @Transactional
     public void addRefresh(Long id, String token) {
@@ -58,6 +59,7 @@ public class RefreshService {
             .build();
         refreshRepository.save(refresh);
     }
+
     // 모든 Refresh 객체 조회
     public List<Refresh> get() {
         List<Refresh> refreshList = new ArrayList<>();

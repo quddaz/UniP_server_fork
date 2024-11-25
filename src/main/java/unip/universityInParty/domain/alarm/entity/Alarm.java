@@ -3,6 +3,7 @@ package unip.universityInParty.domain.alarm.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import unip.universityInParty.domain.alarm.entity.Enum.AlarmCategory;
+
 import java.time.LocalDateTime;
 
 @Getter

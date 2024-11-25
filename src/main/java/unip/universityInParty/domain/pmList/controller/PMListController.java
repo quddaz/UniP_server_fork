@@ -12,6 +12,7 @@ import unip.universityInParty.global.baseResponse.ResponseDto;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+
 @RestController
 @RequiredArgsConstructor
 @Slf4j
@@ -35,6 +36,7 @@ public class PMListController {
         pmListService.deletePartyMember(authMember.getId(), id);
         return ResponseEntity.ok().body(ResponseDto.of("파티 탈퇴 성공", id));
     }
+
     @GetMapping("/{id}")
     @Operation(summary = "파티 가입자 조회", description = "주어진 ID의 파티 가입자를 조회합니다.")
     public ResponseEntity<?> getPMList(@PathVariable Long id) {

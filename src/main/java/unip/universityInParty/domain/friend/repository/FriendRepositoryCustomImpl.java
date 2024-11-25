@@ -13,6 +13,9 @@ import unip.universityInParty.domain.member.entity.QMember;
 
 import java.util.List;
 
+import static unip.universityInParty.domain.friend.entity.QFriend.friend;
+import static unip.universityInParty.domain.member.entity.QMember.member;
+
 @Repository
 @RequiredArgsConstructor
 public class FriendRepositoryCustomImpl implements FriendRepositoryCustom {
@@ -20,14 +23,13 @@ public class FriendRepositoryCustomImpl implements FriendRepositoryCustom {
 
     @Override
     public List<FriendDTO> getMyFriend(Long id) {
-        QMember member = QMember.member;
-        QFriend friend = QFriend.friend;
+
 
         return queryFactory
             .select(Projections.constructor(FriendDTO.class,
                 member.id,
                 member.name,
-                member.profile_image,
+                member.profileImage,
                 member.status))
             .from(friend)
             .join(friend.toMember, member)
@@ -37,14 +39,12 @@ public class FriendRepositoryCustomImpl implements FriendRepositoryCustom {
 
     @Override
     public List<FriendDTO> getBoredFriend(Long id) {
-        QMember member = QMember.member;
-        QFriend friend = QFriend.friend;
 
         return queryFactory
             .select(Projections.constructor(FriendDTO.class,
                 member.id,
                 member.name,
-                member.profile_image,
+                member.profileImage,
                 member.status))
             .from(friend)
             .join(friend.fromMember, member)

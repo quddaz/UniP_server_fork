@@ -12,6 +12,7 @@ import unip.universityInParty.domain.friend.service.FriendService;
 import unip.universityInParty.global.baseResponse.ResponseDto;
 
 import java.util.List;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -45,15 +46,16 @@ public class FriendController {
     @GetMapping
     @Operation(summary = "친구 조회", description = "사용자의 친구 목록을 조회합니다.")
     @ApiResponse(responseCode = "200", description = "친구 조회 성공", content = @Content(mediaType = "application/json",
-                schema = @Schema(type = "array", implementation = FriendDTO.class)))
+        schema = @Schema(type = "array", implementation = FriendDTO.class)))
     public ResponseEntity<?> getFriend(@AuthenticationPrincipal AuthMember authMember) {
         List<FriendDTO> friends = friendService.getMyFriend(authMember.getId());
         return ResponseEntity.ok().body(ResponseDto.of("친구 조회 성공", friends));
     }
+
     @GetMapping("/bored")
     @Operation(summary = "메인 페이지 친구 조회", description = "한가한 친구 최대 5명 조회")
     @ApiResponse(responseCode = "200", description = "친구 조회 성공", content = @Content(mediaType = "application/json",
-                schema = @Schema(type = "array", implementation = FriendDTO.class)))
+        schema = @Schema(type = "array", implementation = FriendDTO.class)))
     public ResponseEntity<?> getBoredFriend(@AuthenticationPrincipal AuthMember authMember) {
         List<FriendDTO> friends = friendService.getBoredFriend(authMember.getId());
         return ResponseEntity.ok().body(ResponseDto.of("친구 조회 성공", friends));

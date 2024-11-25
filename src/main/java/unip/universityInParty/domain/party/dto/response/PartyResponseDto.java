@@ -5,6 +5,7 @@ import lombok.Builder;
 import unip.universityInParty.domain.party.entity.type.PartyType;
 
 import java.time.LocalDateTime;
+
 @Builder
 @Schema(description = "파티 정보 DTO")
 public record PartyResponseDto(
