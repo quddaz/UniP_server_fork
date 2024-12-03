@@ -6,10 +6,12 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 import unip.universityInParty.domain.oauth.refresh.entity.Refresh;
 
 @Configuration
+@EnableRedisRepositories(basePackages = {"unip.universityInParty.domain.oauth.refresh", "unip.universityInParty.domain.universityVerification"})
 public class RedisConfig {
 
     @Value("${spring.data.redis.host}")

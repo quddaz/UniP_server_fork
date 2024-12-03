@@ -1,7 +1,9 @@
 package unip.universityInParty.domain.oauth.refresh.service;
 
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import unip.universityInParty.domain.member.repository.MemberRepository;
@@ -26,8 +28,9 @@ public class RefreshService {
     private final RefreshRepository refreshRepository; // RedisRepository 사용
     private final JwtTokenProvider jwtTokenProvider;
     private final MemberService memberService;
+
     // Refresh Token 신규 발급
-    public Map<String, String> refreshAccessToken(String refreshToken) {
+    public void reIssueToken(String refreshToken, HttpServletResponse response) {
 
         // 토큰 유효성 검사
         jwtTokenProvider.validateToken(refreshToken);
@@ -44,11 +47,12 @@ public class RefreshService {
 
         // 새 토큰 생성 및 갱신
         String newAccess = jwtTokenProvider.createAccessToken(member.getId(), member.getRoles());
-        String newRefresh = jwtTokenProvider.createRefreshToken(member.getId(), member.getRoles());
+        ResponseCookie newRefresh = jwtTokenProvider.createRefreshToken(member.getId(), member.getRoles());
 
-        addRefresh(member.getId(), newRefresh);
+        addRefresh(member.getId(), newRefresh.getValue());
 
-        return ResponseUtil.createTokenMap(newAccess, newRefresh, member.isAuth());
+        response.addHeader("Set-Cookie", newRefresh.toString());
+        response.setHeader("Authorization", "Bearer " + newAccess);
     }
 
     // Refresh 객체를 Redis에 추가

@@ -26,7 +26,6 @@ public class MemberController {
     @GetMapping("/my")
     @Operation(summary = "내 로그인 정보 조회", description = "로그인한 사용자의 정보를 조회합니다.")
     @ApiResponse(responseCode = "200", description = "로그인 정보 조회 성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = MemberDTO.class)))
-    @ApiResponse(responseCode = "401", description = "인증되지 않은 사용자")
     public ResponseEntity<?> getMyLogin(@AuthenticationPrincipal AuthMember authMember) {
         return ResponseEntity.ok().body(ResponseDto.of(
             "로그인 정보 조회 성공",

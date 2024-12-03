@@ -59,6 +59,7 @@ public class PartyService {
     public void delete(Long partyId, Long memberId){
         Party party = partyRepository.findById(partyId)
             .orElseThrow(() -> new CustomException(PartyErrorCode.PARTY_NOT_FOUND));
+
         Member member = memberRepository.findById(memberId)
             .orElseThrow(() -> new CustomException(MemberErrorCode.MEMBER_NOT_FOUND));
 

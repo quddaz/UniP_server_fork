@@ -5,9 +5,6 @@ import org.springframework.data.annotation.Id; // Spring Data Redis의 @Id impor
 
 import lombok.*;
 import org.springframework.data.redis.core.RedisHash;
-import org.springframework.data.redis.core.TimeToLive;
-import org.springframework.data.redis.core.index.Indexed;
-
 
 @Getter
 @Setter

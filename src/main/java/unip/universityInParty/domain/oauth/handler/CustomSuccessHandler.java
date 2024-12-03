@@ -5,6 +5,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseCookie;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
@@ -28,10 +29,12 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         AuthMember authUser = (AuthMember) authentication.getPrincipal();
 
         String accessToken = jwtTokenProvider.createAccessToken(authUser.getId(), authUser.getRoles());
-        String refreshToken = jwtTokenProvider.createRefreshToken(authUser.getId(), authUser.getRoles());
+        ResponseCookie refreshToken = jwtTokenProvider.createRefreshToken(authUser.getId(), authUser.getRoles());
 
-        refreshService.addRefresh(authUser.getId(), refreshToken);
-        Map<String, String> token = ResponseUtil.createTokenMap(accessToken, refreshToken, authUser.isAuth());
-        ResponseUtil.writeJsonResponse(response, token);
+        refreshService.addRefresh(authUser.getId(), refreshToken.getValue());
+
+        response.setHeader("Authorization", "Bearer " + accessToken);
+        response.addHeader("Set-Cookie", refreshToken.toString());
+
     }
 }

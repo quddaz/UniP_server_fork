@@ -6,6 +6,7 @@ import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Component;
 import unip.universityInParty.domain.member.entity.Member;
 import unip.universityInParty.domain.member.repository.MemberRepository;
@@ -59,14 +60,14 @@ public class JwtTokenProvider {
     /**
      * RefreshToken 생성
      */
-    public String createRefreshToken(Long memberId, List<String> roles) {
+    public ResponseCookie createRefreshToken(Long memberId, List<String> roles) {
         long now = (new Date()).getTime();
 
         // Refresh token 유효 기간 설정
         Date refreshValidity = new Date(now + jwtProperties.refreshTokenExpiration());
 
         // Refresh token 생성
-        return Jwts.builder()
+        String refreshToken = Jwts.builder()
             .setIssuedAt(new Date(now))
             .setExpiration(refreshValidity)
             .setIssuer(jwtProperties.issuer())
@@ -75,6 +76,8 @@ public class JwtTokenProvider {
             .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
             .signWith(key, SignatureAlgorithm.HS512)
             .compact();
+
+        return createCookie(refreshToken);                       // 쿠키로 반환
     }
 
 
@@ -100,5 +103,14 @@ public class JwtTokenProvider {
 
         return memberRepository.findById(id)
             .orElseThrow(() -> new CustomException(MemberErrorCode.MEMBER_NOT_FOUND));
+    }
+
+    public ResponseCookie createCookie(String refreshToken) {
+        return ResponseCookie.from("REFRESH_TOKEN", refreshToken)
+            .path("/")
+            .httpOnly(true)
+            .maxAge(jwtProperties.refreshTokenExpiration() / 1000)
+            .sameSite("Lax") // SameSite 설정
+            .build();
     }
 }

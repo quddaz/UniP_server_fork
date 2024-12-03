@@ -37,7 +37,8 @@ public class SecurityConfig {
         "/webjars/**",
         "/global/**",
         "/actuator/**",
-        "/auth/**"
+        "/auth/**",
+        "/favicon.ico"
     };
 
     @Bean

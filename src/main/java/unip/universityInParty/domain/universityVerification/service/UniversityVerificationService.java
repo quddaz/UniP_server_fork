@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import unip.universityInParty.domain.universityVerification.entity.EmailBlackList;
 import unip.universityInParty.domain.universityVerification.entity.UniversityVerification;
-import unip.universityInParty.domain.universityVerification.repository.EmailBlackListRepository;
+import unip.universityInParty.domain.emailBlackList.repository.EmailBlackListRepository;
 import unip.universityInParty.domain.universityVerification.repository.UniversityVerificationRepository;
 import unip.universityInParty.domain.member.entity.Member;
 import unip.universityInParty.domain.member.repository.MemberRepository;
