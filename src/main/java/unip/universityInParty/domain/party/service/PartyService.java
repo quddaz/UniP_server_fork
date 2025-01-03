@@ -30,15 +30,23 @@ public class PartyService {
     private final MemberRepository memberRepository;
     private final CourseService courseService;
 
+    public Party findById(Long id){
+        return partyRepository.findById(id)
+            .orElseThrow(() -> new CustomException(PartyErrorCode.PARTY_NOT_FOUND));
+    }
+
+    public Party findByIdPessimisticLock(Long id){
+        return partyRepository.findByIdPessimisticLock(id)
+            .orElseThrow(() -> new CustomException(PartyErrorCode.PARTY_NOT_FOUND));
+    }
+
+    public boolean existsById(Long id){
+        return partyRepository.existsById(id);
+    }
+
     // 주어진 파티 ID에 대한 세부 정보를 조회합니다.
     public PartyDetailsResponseDto getPartyDetailById(Long id){
         return partyRepository.findPartyDetailById(id);
-    }
-
-    // 주어진 파티 ID에 대한 파티 정보를 조회합니다.
-    public Party getPartyById(Long id){
-        return partyRepository.findById(id)
-            .orElseThrow(() -> new CustomException(PartyErrorCode.PARTY_NOT_FOUND));
     }
 
     // 메인 페이지에 표시할 파티 리스트를 조회합니다.
@@ -46,8 +54,8 @@ public class PartyService {
         return partyRepository.getMainPartyPage(partyType);
     }
 
-    public List<PartyResponseDto> getPartyPage(PartyType partyType, int pageNo, int lastId) {
-        return partyRepository.getPartyPage(partyType, (long) pageNo, lastId);
+    public List<PartyResponseDto> getPartyPage(PartyType partyType, long lastId, int size) {
+        return partyRepository.getPartyPage(partyType, lastId, size);
     }
     // 자신의 파티를 조회합니다.
     public List<PartyMyDto> getMyParty(Long id){

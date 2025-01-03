@@ -17,4 +17,5 @@ public interface PartyRepositoryCustom {
     List<PartyMyDto> getMyParty(Long id);
 
     List<PartyResponseDto> getPartyPage(PartyType partyType, Long lastId, int size);
+
 }

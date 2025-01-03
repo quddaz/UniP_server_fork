@@ -38,12 +38,6 @@ public class Member {
     @Enumerated(EnumType.STRING)
     private Status status;
 
-
-
-    public String getRoleKey() {
-        return this.role.getKey();
-    }
-
     public List<String> getRoles() {
         return List.of(this.role.name());
     }

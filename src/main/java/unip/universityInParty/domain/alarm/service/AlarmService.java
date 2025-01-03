@@ -56,7 +56,7 @@ public class AlarmService {
     public void sendInvitationAlarm(Long receiverId, Long senderId, Long partyId) {
         // 초대 알림 전송
         validateUniqueAlarm(receiverId, senderId, AlarmCategory.INVITATION);
-        Party party = partyService.getPartyById(partyId);
+        Party party = partyService.findById(partyId);
 
         if (party.isClosed()) {
             throw new CustomException(PartyErrorCode.PARTY_CLOSED);

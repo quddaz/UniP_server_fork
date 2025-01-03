@@ -20,7 +20,7 @@ import unip.universityInParty.domain.party.exception.PartyErrorCode;
 @Builder
 @Table(
     indexes = {
-        @Index(name = "idx_party_category_status", columnList = "partyType, isClosed")
+        @Index(name = "idx_party_category_status", columnList = " isClosed, partyType")
     }
 )
 public class Party {
@@ -45,9 +45,6 @@ public class Party {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
-
-    @Version  // 낙관적 락을 위한 버전 필드 추가
-    private int version;
 
     private boolean isClosed;
 
