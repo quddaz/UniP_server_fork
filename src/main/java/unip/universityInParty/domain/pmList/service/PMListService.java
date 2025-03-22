@@ -6,8 +6,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import unip.universityInParty.domain.member.entity.Member;
 import unip.universityInParty.domain.member.repository.MemberRepository;
+import unip.universityInParty.domain.member.service.MemberService;
 import unip.universityInParty.domain.party.entity.Party;
 import unip.universityInParty.domain.party.repository.PartyRepository;
+import unip.universityInParty.domain.party.service.PartyService;
 import unip.universityInParty.domain.pmList.entity.Enum.PartyRole;
 import unip.universityInParty.domain.pmList.entity.PMList;
 import unip.universityInParty.domain.pmList.repository.PMListRepository;
@@ -23,12 +25,11 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class PMListService {
     private final PMListRepository pmListRepository;
-    private final MemberRepository memberRepository;
-    private final PartyRepository partyRepository;
-
+    private final MemberService memberService;
+    private final PartyService partyService;
     // 주어진 파티 ID에 속한 멤버 ID 리스트를 조회합니다.
     public List<Long> getMemberIdsByPartyId(Long partyId) {
-        if (!partyRepository.existsById(partyId)) {
+        if (!partyService.existsById(partyId)) {
             throw new CustomException(PartyErrorCode.PARTY_NOT_FOUND);
         }
 
@@ -39,10 +40,8 @@ public class PMListService {
     // 파티에 멤버를 추가하고, 멤버의 역할을 설정합니다.
     @Transactional
     public void createJoinParty(PartyRole partyRole, Long memberId, Long partyId) {
-        Party party = partyRepository.findById(partyId)
-            .orElseThrow(() -> new CustomException(PartyErrorCode.PARTY_NOT_FOUND));
-        Member member = memberRepository.findById(memberId)
-            .orElseThrow(() -> new CustomException(MemberErrorCode.MEMBER_NOT_FOUND));
+        Party party = partyService.findByIdPessimisticLock(partyId);
+        Member member = memberService.findById(memberId);
         if (pmListRepository.existsByPartyAndMember(party, member)) {
             throw new CustomException(PartyErrorCode.ALREADY_JOINED);
         }
@@ -58,10 +57,9 @@ public class PMListService {
     // 특정 멤버를 파티에서 삭제합니다.
     @Transactional
     public void deletePartyMember(Long memberId, Long partyId) {
-        Party party = partyRepository.findById(partyId)
-            .orElseThrow(() -> new CustomException(PartyErrorCode.PARTY_NOT_FOUND));
-        Member member = memberRepository.findById(memberId)
-            .orElseThrow(() -> new CustomException(MemberErrorCode.MEMBER_NOT_FOUND));
+        Party party = partyService.findByIdPessimisticLock(partyId);
+        Member member = memberService.findById(memberId);
+
 
         if (!pmListRepository.existsByPartyAndMember(party, member)) {
             throw new CustomException(PartyErrorCode.MEMBER_NOT_IN_PARTY);

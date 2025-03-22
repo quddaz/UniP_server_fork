@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -24,12 +25,15 @@ import java.io.IOException;
 public class RefreshController {
     private final RefreshService refreshService;
 
-    @PostMapping("/refresh")
-    @Operation(summary = "토큰 재발급", description = "리프레시 토큰을 사용하여 새로운 액세스 토큰과 리프레시 토큰을 재발급합니다.")
+    @GetMapping("/reissue")
     public ResponseEntity<?> reIssueToken(
-        @RequestBody RefreshTokenRequest refresh) {
+        @CookieValue(name = "REFRESH_TOKEN") String refreshToken, HttpServletResponse response) {
 
-        return ResponseEntity.ok(ResponseDto.of("Refresh 재발급 성공", refreshService.refreshAccessToken(refresh.refreshToken())));
+        refreshService.reIssueToken(refreshToken, response);
+
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(ResponseDto.ok());
     }
 
     @PostMapping("/logout")

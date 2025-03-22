@@ -49,7 +49,15 @@ public class PartyController {
         PartyDetailsResponseDto partyDetailDto = partyService.getPartyDetailById(id);
         return ResponseEntity.ok().body(ResponseDto.of("파티 상세 조회 성공", partyDetailDto));
     }
-
+    @GetMapping("query/{id}")
+    @Operation(summary = "파티 상세 조회", description = "주어진 ID에 해당하는 파티의 상세 정보를 조회합니다.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "파티 상세 조회 성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = PartyDetailDto.class))),
+    })
+    public ResponseEntity<?> getPartyByIdQuery(@PathVariable Long id) {
+        PartyDetailsResponseDto partyDetailDto = partyService.getPartyDetailById(id);
+        return ResponseEntity.ok().body(ResponseDto.of("파티 상세 조회 성공", partyDetailDto));
+    }
     @PostMapping()
     @Operation(summary = "파티 생성", description = "새로운 파티를 생성합니다.")
     public ResponseEntity<?> createParty(@Valid @RequestBody PartyDto partyDto,
@@ -86,11 +94,10 @@ public class PartyController {
 
     @GetMapping("/nooffset")
     @Operation(summary = "파티 전체 성능 개선 페이징 조회", description = "파티 전체 정보를 조회합니다.")
-    public ResponseEntity<?> getPartyPage2(@RequestParam(required = false) PartyType partyType, @RequestParam(required = false) int lastId) {
+    public ResponseEntity<?> getPartyPage2(@RequestParam(required = false) PartyType partyType, @RequestParam(required = false) long lastId) {
         List<PartyResponseDto> parties = partyService.getPartyPage(partyType, lastId, 5);
         return ResponseEntity.ok().body(ResponseDto.of("파티 전체 조회 성공", parties));
     }
-
     @GetMapping("/my")
     @Operation(summary = "자신의 파티 조회", description = "친구를 파티 초대하기 위한 API")
     @ApiResponse(responseCode = "200", description = "파티 조회 성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = PartyMyDto.class)))

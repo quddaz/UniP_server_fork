@@ -113,7 +113,6 @@ public class PartyRepositoryCustomImpl implements PartyRepositoryCustom {
                 party.partyType.eq(partyType),
                 lastId != null ? party.id.gt(lastId) : party.id.gt(0)
             )
-            .orderBy(party.id.asc())
             .limit(size)
             .fetch();
     }
